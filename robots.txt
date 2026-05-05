@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://Shunsuke-Kurita.github.io/sitemap.xml
