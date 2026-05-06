@@ -187,6 +187,7 @@ include: ["_pages", "_scripts"]
 exclude:
   - bin/
   - CONTRIBUTING.md
+  - cv-source/
   - CUSTOMIZE.md
   - Dockerfile
   - docker-compose.yml

@@ -35,6 +35,9 @@ layout: default
     {% if page.description %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
+    {% if page.cv_pdf_date %}
+      <p class="post-description text-muted" style="font-size: 0.85em;">PDF last updated: {{ page.cv_pdf_date }}</p>
+    {% endif %}
   </header>
 
   <article>
