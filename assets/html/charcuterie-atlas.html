@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charcuterie Atlas — Suisse, Savoie, Nord Italia</title>
+<style>
+  :root {
+    --bg: #fbf8f2;
+    --paper: #ffffff;
+    --ink: #1f1d1a;
+    --ink-soft: #4a463f;
+    --ink-muted: #7a7368;
+    --rule: #e6dfd1;
+    --accent: #9a2a2a;
+    --accent-soft: #c97a4a;
+    --gold: #b88a3e;
+    --ch: #d5453a;
+    --fr: #2f4ea3;
+    --it: #2a8a4a;
+    --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+    --serif: "Cormorant Garamond", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", Georgia, serif;
+    --sans: "Inter", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 28px 96px;
+  }
+
+  /* Header */
+  header.masthead {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .subtitle {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+  .intro {
+    max-width: 64ch;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+  .intro p { margin: 0 0 10px; }
+
+  /* Sibling link */
+  .sibling-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    margin-bottom: 14px;
+    transition: all 0.15s ease;
+  }
+  .sibling-nav:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .sibling-nav::before { content: "←"; }
+
+  /* Meta strip */
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px 36px;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+  }
+  .meta-strip span strong {
+    color: var(--ink);
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  /* Filter bar */
+  .filters {
+    position: sticky;
+    top: 0;
+    background: rgba(251, 248, 242, 0.94);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    padding: 16px 0;
+    margin: 8px 0 28px;
+    border-bottom: 1px solid var(--rule);
+    z-index: 20;
+  }
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .filter-group:last-child { margin-bottom: 0; }
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-right: 6px;
+    min-width: 64px;
+  }
+  .chip {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .chip:hover {
+    border-color: var(--ink-soft);
+    color: var(--ink);
+  }
+  .chip.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* Section heading between groups */
+  .group-heading {
+    grid-column: 1 / -1;
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 36px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .group-heading .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Cards grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 22px;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    box-shadow: var(--shadow);
+  }
+
+  .card-photo {
+    aspect-ratio: 16 / 10;
+    background:
+      repeating-linear-gradient(135deg, #f0e2d2 0 8px, #ead7c2 8px 16px);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .card-photo::after {
+    content: "PHOTO";
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    opacity: 0.55;
+  }
+  .card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-body {
+    padding: 18px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.45rem;
+    line-height: 1.15;
+    margin: 0 0 4px;
+    color: var(--ink);
+  }
+  .card-name-jp {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--bg);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+  }
+  .badge.aop, .badge.dop { background: #fdf5e8; border-color: #ecd7a4; color: #8a6212; }
+  .badge.igp { background: #f0f5e8; border-color: #c9d8a4; color: #5b701f; }
+  .badge.ch { background: #fbeaea; color: var(--ch); border-color: #f3c8c8; }
+  .badge.fr { background: #e8edf8; color: var(--fr); border-color: #c7d4eb; }
+  .badge.it { background: #e6f3ea; color: var(--it); border-color: #b9dcc4; }
+
+  .specs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    row-gap: 6px;
+    font-size: 0.86rem;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border-radius: 4px;
+  }
+  .specs dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding-top: 2px;
+  }
+  .specs dd {
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 12px 0 4px;
+  }
+  .section-body {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .section-body + .section-title { margin-top: 14px; }
+
+  /* Index TOC */
+  .toc {
+    margin: 12px 0 32px;
+    padding: 18px 22px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-size: 0.88rem;
+  }
+  .toc h3 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .toc ul { margin: 0; padding: 0; list-style: none; columns: 3; column-gap: 22px; }
+  .toc li { padding: 2px 0; break-inside: avoid; }
+  .toc a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted transparent; }
+  .toc a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Footer */
+  footer.colophon {
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    font-family: var(--sans);
+  }
+  footer.colophon p { margin: 0 0 6px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 18px 60px; }
+    .toc ul { columns: 1; }
+    .filter-label { min-width: auto; width: 100%; margin-bottom: 4px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    .filters, footer.colophon { display: none; }
+    .card { break-inside: avoid; }
+  }
+
+  /* =================== DETAIL VIEW SYSTEM =================== */
+  .card { cursor: pointer; }
+  .card .specs,
+  .card .section-title,
+  .card .section-body { display: none; }
+  .card-body { padding-bottom: 18px; }
+
+  /* Detail mode: hide everything except active card */
+  body.detail-mode .group-heading,
+  body.detail-mode .filters,
+  body.detail-mode nav.toc,
+  body.detail-mode .diagrams,
+  body.detail-mode .card:not(.is-active) { display: none !important; }
+  body.detail-mode .grid { display: contents; }
+  body.detail-mode .card.is-active {
+    display: flex !important;
+    cursor: default;
+    max-width: 760px;
+    margin: 24px auto;
+    border-color: var(--ink);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  }
+  body.detail-mode .card.is-active:hover { transform: none; }
+  body.detail-mode .card.is-active .specs { display: grid; }
+  body.detail-mode .card.is-active .section-title,
+  body.detail-mode .card.is-active .section-body { display: block; }
+  body.detail-mode .card.is-active .card-photo { aspect-ratio: 21 / 9; }
+  body.detail-mode .card.is-active .card-body { padding: 24px 28px 28px; }
+
+  /* Shrink masthead in detail mode for focus on item */
+  body.detail-mode header.masthead {
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+  }
+  body.detail-mode header.masthead .eyebrow,
+  body.detail-mode header.masthead .subtitle,
+  body.detail-mode header.masthead .intro,
+  body.detail-mode header.masthead .meta-strip { display: none; }
+  body.detail-mode header.masthead h1 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+  body.detail-mode header.masthead h1 em { font-style: normal; color: var(--ink-muted); }
+
+  /* Back button */
+  .back-btn {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    cursor: pointer;
+    margin: 0 0 8px;
+    transition: all 0.15s ease;
+    font-weight: 600;
+  }
+  .back-btn:hover { background: var(--ink); color: var(--bg); }
+  body.detail-mode .back-btn { display: inline-flex; }
+
+  /* Prev/Next navigation in detail mode */
+  .detail-nav {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto 32px;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  body.detail-mode .detail-nav { display: flex; }
+  .detail-nav button {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 10px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .detail-nav button:hover:not(:disabled) {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .detail-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Mobile tweaks */
+  @media (max-width: 720px) {
+    body.detail-mode .card.is-active {
+      margin: 12px 0 16px;
+      max-width: 100%;
+    }
+    body.detail-mode .card.is-active .card-body { padding: 18px 18px 20px; }
+    .detail-nav { max-width: 100%; margin: 0 0 24px; }
+    .detail-nav button { font-size: 10px; padding: 9px 8px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="masthead">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <a href="cheese-atlas.html" class="sibling-nav">Cheese Atlas</a>
+    <a href="meat-cuts-atlas.html" class="sibling-nav">Meat Cuts Atlas</a>
+  </div>
+  <div class="eyebrow">A personal field guide · v0.1 · 2026</div>
+  <h1>Charcuterie Atlas <em>—</em> Suisse · Savoie · Nord Italia</h1>
+  <p class="subtitle">CERN周辺で出会えるシャルキュトリー（肉加工品）の個人的フィールドガイド</p>
+  <div class="intro">
+    <p>チーズに続き、肉編。スイスのBoucherie/Metzgerei、フランスのcharcuterie traditionnelle、イタリアのsalumeriaは、いずれもヨーロッパ屈指の伝統技術。本書はCERN周辺で実際に手に入る30品を、地域・原料・カテゴリ別に整理した個人的開拓記録。</p>
+    <p>大まかな分類：
+    <strong>jambon cru</strong>（生ハム類・豚もも）/
+    <strong>viande séchée</strong>（乾燥牛肉系）/
+    <strong>saucisson sec</strong>（乾燥サラミ・サラメ）/
+    <strong>saucisse à cuire</strong>（要加熱・燻製ソーセージ）/
+    <strong>charcuterie cuite</strong>（加熱済み）/
+    <strong>lard</strong>（脂肪系）/
+    <strong>abats</strong>（内臓系）。</p>
+    <p>購入はスーパー（Coop, Migros, Manor, Aligro, Carrefour, Auchan）でかなりカバーできるが、AOP/DOP/IGPの本物を狙うならBoucherie/Charcuterie traditionnelle・市場・salumeriaへ。ジュネーヴのプランパレ市場（土曜）、Carouge市場、Annemasseのfromagerie-charcuterieが起点として優秀。</p>
+  </div>
+  <div class="meta-strip">
+    <span><strong>30</strong>items</span>
+    <span><strong>3</strong>regions</span>
+    <span><strong>20</strong>AOP / DOP / IGP</span>
+    <span><strong>updated</strong>2026-05</span>
+  </div>
+</header>
+<button class="back-btn" type="button">← 一覧に戻る</button>
+
+<nav class="detail-nav" aria-label="Item navigation">
+  <button type="button" data-direction="prev">← 前のアイテム</button>
+  <button type="button" data-direction="next">次のアイテム →</button>
+</nav>
+
+
+
+<nav class="toc">
+  <h3>Index</h3>
+  <ul>
+    <li><a href="#suisse">スイス (8)</a></li>
+    <li><a href="#savoie">サヴォワ・ジュラ・リヨン (9)</a></li>
+    <li><a href="#italia">北イタリア (13)</a></li>
+  </ul>
+</nav>
+
+<div class="filters" id="filters">
+  <div class="filter-group">
+    <span class="filter-label">Region</span>
+    <button class="chip active" data-filter="region" data-value="all">All</button>
+    <button class="chip" data-filter="region" data-value="ch">🇨🇭 Suisse</button>
+    <button class="chip" data-filter="region" data-value="fr">🇫🇷 Savoie · Jura · Lyon</button>
+    <button class="chip" data-filter="region" data-value="it">🇮🇹 Nord Italia</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Animal</span>
+    <button class="chip active" data-filter="animal" data-value="all">All</button>
+    <button class="chip" data-filter="animal" data-value="porc">豚 Porc</button>
+    <button class="chip" data-filter="animal" data-value="boeuf">牛 Bœuf</button>
+    <button class="chip" data-filter="animal" data-value="melange">混合</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Family</span>
+    <button class="chip active" data-filter="family" data-value="all">All</button>
+    <button class="chip" data-filter="family" data-value="jambon-cru">生ハム</button>
+    <button class="chip" data-filter="family" data-value="viande-sechee">乾燥牛肉</button>
+    <button class="chip" data-filter="family" data-value="saucisson-sec">乾燥サラミ</button>
+    <button class="chip" data-filter="family" data-value="saucisse-cuire">調理用ソーセージ</button>
+    <button class="chip" data-filter="family" data-value="charcuterie-cuite">加熱済</button>
+    <button class="chip" data-filter="family" data-value="lard">脂肪系</button>
+    <button class="chip" data-filter="family" data-value="abats">内臓</button>
+  </div>
+</div>
+
+<!-- =================== SUISSE =================== -->
+<h2 id="suisse" class="group-heading">スイス Suisse <span class="count">8 items</span></h2>
+<div class="grid">
+
+  <!-- Bündnerfleisch -->
+  <article class="card" data-region="ch" data-animal="boeuf" data-family="viande-sechee" data-id="viande-des-grisons-bundnerfleisch-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Viande des Grisons / Bündnerfleisch IGP</h3>
+      <div class="card-name-jp">ヴィアンド・デ・グリゾン</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge igp">IGP 1999</span>
+        <span class="badge">乾燥牛肉</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・グラウビュンデン（標高800m以上の乾燥した山岳気候）</dd>
+        <dt>原料</dt><dd>牛もも肉、塩、白ワイン、ハーブ、スパイス</dd>
+        <dt>製法</dt><dd>塩漬け→3〜5週間の冷気乾燥→特有の四角い形状にプレス成形</dd>
+        <dt>熟成</dt><dd>合計約12〜17週間</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">脂肪を完全に取り除いた赤身のみを使うため、ほぼ純粋に「凝縮された牛肉のエッセンス」。塩味と旨味、わずかなハーブ。長方形のブロックを極薄にスライスして食べる。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">紙のように薄くスライス、バターを塗ったライ麦パン（Bündner Birnbrot）と。アペリティフの定番。Pinot Noir de Grisons（Maienfeld, Malans）、Veltliner（Valtellinaの隣）。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">乾燥した山岳気候を生かした保存食として中世から。「Bündnerfleisch」（ドイツ語）と「Viande des Grisons」（仏語）は同じ製品。よくBresaolaと比較されるが、こちらは乾燥が深く、脱水度が高い。スーパーで「Trockenfleisch」と書いてあるものはIGPではない安価版もあるので注意。</p>
+    </div>
+  </article>
+
+  <!-- Salsiz -->
+  <article class="card" data-region="ch" data-animal="melange" data-family="saucisson-sec" data-id="salsiz">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Salsiz</h3>
+      <div class="card-name-jp">サルシッツ（グラウビュンデンのサラミ）</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">乾燥サラミ</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>グラウビュンデン州、エンガディン</dd>
+        <dt>原料</dt><dd>牛肉＋豚肉＋脂、塩、スパイス、赤ワイン</dd>
+        <dt>熟成</dt><dd>3〜6週間の冷気乾燥</dd>
+        <dt>形状</dt><dd>小型細長 80–150g、ハイキングのお供サイズ</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">スイス山岳地帯の典型的なドライソーセージ。締まった食感、塩味と旨味のバランス、わずかに発酵香。ハイキングでナイフで削いで食べる伝統的スタイル。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">ナイフで斜めにスライス。Birnenbrot、ライ麦パンと。Heida、Pinot Noirのスイス産。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">バリエーションが豊富で、Wildsalsiz（鹿肉）、Hirschsalsiz、Geissalsiz（山羊肉）など。Migros, Coopで気軽に買える。山に登るときの定番。</p>
+    </div>
+  </article>
+
+  <!-- Saucisson vaudois -->
+  <article class="card" data-region="ch" data-animal="porc" data-family="saucisse-cuire" data-id="saucisson-vaudois-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Saucisson vaudois IGP</h3>
+      <div class="card-name-jp">ソシソン・ヴォードワ</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge igp">IGP 2004</span>
+        <span class="badge">調理用</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ヴォー（CERN隣接）</dd>
+        <dt>原料</dt><dd>豚肉、豚脂、塩、スパイス、赤ワイン</dd>
+        <dt>製法</dt><dd>軽く燻製（モミ・松の冷燻）後乾燥</dd>
+        <dt>調理</dt><dd>湯で40分〜1時間（ピアスせず）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">スイスフランス語圏の冬の定番。茹でるとぷりっとした食感、燻香、ワインのコク。生では食べない（要加熱）。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Papet vaudois（リーキとジャガイモの煮込み）と一緒に。Chasselas de La Côte、Salvagnin (Vaudの赤ブレンド)。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">中世から、葡萄畑の労働者の食事として発展。各村に独自のレシピがあり、地域格差が大きい。Migros, Coopで安価版、Bouverat等のboucherieで本物を。</p>
+    </div>
+  </article>
+
+  <!-- Saucisse aux choux -->
+  <article class="card" data-region="ch" data-animal="porc" data-family="saucisse-cuire" data-id="saucisse-aux-choux-vaudoise-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Saucisse aux choux vaudoise IGP</h3>
+      <div class="card-name-jp">ソシス・オー・シュー</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge igp">IGP 2004</span>
+        <span class="badge">調理用</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ヴォー</dd>
+        <dt>原料</dt><dd>豚肉、豚脂、キャベツ（茹でて細かく刻む）25%以上、スパイス</dd>
+        <dt>製法</dt><dd>軽く燻製後、自然乾燥</dd>
+        <dt>調理</dt><dd>湯で約1時間</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">スイス独特——肉のなかにキャベツが入る珍しいレシピ。マイルドで、キャベツの食感がアクセント。Saucisson vaudoisより軽い印象。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Papet vaudoisの定番具材。マスタードと。Chasselas、Pinot Noir軽め。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">17世紀以前から記録。キャベツを入れる理由は、肉を節約しつつボリュームを出すための「農民の知恵」。今ではヴォー州の郷土を象徴する一品。</p>
+    </div>
+  </article>
+
+  <!-- Longeole -->
+  <article class="card" data-region="ch" data-animal="porc" data-family="saucisse-cuire" data-id="longeole-de-geneve-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Longeole de Genève IGP</h3>
+      <div class="card-name-jp">ロンジョル（ジュネーヴ即地元！）</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge igp">IGP 2009</span>
+        <span class="badge">調理用</span>
+        <span class="badge">CERN即地元</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ジュネーヴ（CERNから10km）</dd>
+        <dt>原料</dt><dd>豚肉、豚脂、豚皮（couenne）、塩、白胡椒、フェンネルの実（必須）</dd>
+        <dt>製法</dt><dd>大きい腸詰、軽い乾燥のみ（燻製なし）</dd>
+        <dt>調理</dt><dd>水から1.5〜2時間ゆっくり茹でる（沸騰させない）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">フェンネルの香りが独特で、地中海風の風味。皮が混ざることで独特のゼラチン質と食感。直径太め（5–8cm）、長さ20–40cm。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Cardons（カルドン＝アザミの一種）のグラタンと一緒に食べるのがジュネーヴの伝統的冬料理。Gamay de Genève、Chasselas、Pinot Noir。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">ジュネーヴの伝統料理の主役。CERN滞在中、絶対に食べておきたい「ご当地モノ」。Confrérie de la Longeole（ロンジョル兄弟団）まで存在する。クリスマス・年末に最も食べられる。</p>
+    </div>
+  </article>
+
+  <!-- Boutefas -->
+  <article class="card" data-region="ch" data-animal="porc" data-family="saucisse-cuire" data-id="boutefas-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Boutefas AOP</h3>
+      <div class="card-name-jp">ブートファ（ヴォー・フリブール伝統）</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2021</span>
+        <span class="badge">調理用</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ヴォー、フリブール</dd>
+        <dt>原料</dt><dd>豚肉、豚脂、塩、スパイス、赤ワイン、ニンニク</dd>
+        <dt>製法</dt><dd>豚の盲腸を腸詰めに使う独特の不規則な丸形。冷燻後、長期乾燥</dd>
+        <dt>調理</dt><dd>水から2〜3時間ゆっくり茹でる</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「肉のフォアグラ」と呼ばれるほど濃厚。サイズが大きく（1kg以上）、形は不規則で個性的。塩味と燻香、ワインのコクが深い。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">輪切りでパンと、またはレンズ豆・キャベツ煮と。重めの赤、力強いChasselas、Salvagnin。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">1634年から記録のある古い製品。長くIGP申請中だったが、2021年に直接AOPを取得（スイスでは珍しい）。各家庭・各村で形が微妙に違うのが特徴。冬の宴会の主役。</p>
+    </div>
+  </article>
+
+  <!-- Jambon de la Borne -->
+  <article class="card" data-region="ch" data-animal="porc" data-family="jambon-cru" data-id="jambon-de-la-borne">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Jambon de la Borne</h3>
+      <div class="card-name-jp">ジャンボン・ド・ラ・ボルヌ（暖炉ハム）</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">生ハム/燻製</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・フリブール（特にGruyère地方）</dd>
+        <dt>原料</dt><dd>豚もも肉、塩、スパイス</dd>
+        <dt>製法</dt><dd>伝統的な煙突暖炉「Borne fribourgeoise」で長期間冷燻</dd>
+        <dt>熟成</dt><dd>6ヶ月以上</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">最大の特徴は、針葉樹の冷燻による深い燻香。肉は赤く、熟成期間の長さからくる凝縮された旨味。スライスして生で食べる。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">薄切りでアペリティフ、フォンデュ・モワティエの後の口直しに。Chasselas、Pinot Noir。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Borne fribourgeoise」とは、円錐形の伝統的暖炉。フリブールの古い農家の象徴で、年に1回（11月）に行うTuage（屠殺）の後、家族で1年分のハム・ベーコン・ソーセージをここで燻製。CulturalLandscape的にも重要。AOP申請中の品。</p>
+    </div>
+  </article>
+
+  <!-- Cervelas -->
+  <article class="card" data-region="ch" data-animal="melange" data-family="charcuterie-cuite" data-id="cervelas">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Cervelas</h3>
+      <div class="card-name-jp">セルヴェラ（スイスの国民的ソーセージ）</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge">国民食</span>
+        <span class="badge">加熱済</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>スイス全土</dd>
+        <dt>原料</dt><dd>牛肉、豚肉、ベーコン、香辛料、氷</dd>
+        <dt>製法</dt><dd>細挽きエマルジョン、燻製、加熱済み</dd>
+        <dt>形状</dt><dd>短く太い（約100g）、ブラジル産Zebu牛の盲腸を腸詰に使う伝統</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">滑らかで弾力のあるエマルジョン構造、軽い燻香。マイルドでスナック感覚。年間1.6億本食べられる国民食。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">両端に十字を切ってグリル（焼くと開く＝「カモのくちばし」スタイル）。マスタードと。サラダ「Wurst-Käse-Salat」（Cervelas+Emmentaler+ピクルス）。ビール、軽い白。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">1891年、Bâleで考案。2008年、BSE対策でブラジル産Zebu盲腸の輸入が禁止され「Cervelasの危機」と呼ばれる政治問題に発展（最終的に輸入再開）。スイス料理史の重要な一品。</p>
+    </div>
+  </article>
+
+</div>
+
+<!-- =================== SAVOIE / JURA / LYON =================== -->
+<h2 id="savoie" class="group-heading">サヴォワ・ジュラ・リヨン <span class="count">9 items</span></h2>
+<div class="grid">
+
+  <!-- Diots -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="saucisse-cuire" data-id="diots-de-savoie">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Diots de Savoie</h3>
+      <div class="card-name-jp">ディオ・ド・サヴォワ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Savoie</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">調理用</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Savoie, Haute-Savoie</dd>
+        <dt>原料</dt><dd>豚肉、豚脂、塩、スパイス、ニンニク</dd>
+        <dt>製法</dt><dd>燻製版（fumés）／非燻製版（natures）あり</dd>
+        <dt>調理</dt><dd>白ワインと玉ねぎで30〜40分煮込む</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">サヴォワの小さい豚ソーセージ。短く（10cm程度）、太い。煮込むと白ワインを吸い、玉ねぎの甘みと一体化。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Diots au vin blanc（白ワイン煮込み）、Crozets（蕎麦の小麦パスタ）やポレンタと。Apremont、Roussette de Savoie。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">スキー後の山小屋メニューの定番。同じ系統に「Pormonier」「Atriaux」など別バリエーション。サヴォワで最も日常的に食べられる肉料理かもしれない。</p>
+    </div>
+  </article>
+
+  <!-- Pormonier -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="saucisse-cuire" data-id="pormonier">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Pormonier</h3>
+      <div class="card-name-jp">ポルモニエ（サヴォワのハーブソーセージ）</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Savoie</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">調理用</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Maurienne, Tarentaise（サヴォワ高地）</dd>
+        <dt>原料</dt><dd>豚肉、ポロ葱・ホウレンソウ・キャベツ・キャラウェイ等の野菜とハーブ</dd>
+        <dt>製法</dt><dd>軽く乾燥、調理用</dd>
+        <dt>調理</dt><dd>湯で20〜30分、白ワイン煮込み</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">サヴォワのSaucisse aux choux的存在。葉物野菜が大量に入り、ハーブ香が立つ。Diotsより緑色っぽい断面。冬のミネラル補給を兼ねた農民食。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">CrozetsまたはPolenta、レンズ豆と。Mondeuse、Apremont。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Pormoun」（古サヴォワ語で「肺」）が語源で、もともと内臓肉も使った貧者のソーセージ。今では肉中心のレシピが一般的。Maurienneで毎年Pormonierフェスティバルあり。</p>
+    </div>
+  </article>
+
+  <!-- Saucisse de Morteau -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="saucisse-cuire" data-id="saucisse-de-morteau-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Saucisse de Morteau IGP</h3>
+      <div class="card-name-jp">ソシス・ド・モルトー</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Jura / Doubs</span>
+        <span class="badge igp">IGP 2010</span>
+        <span class="badge">調理用</span>
+        <span class="badge">燻製</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Franche-Comté（Doubs, Jura, Haute-Saône, Territoire de Belfort）</dd>
+        <dt>原料</dt><dd>豚肉（Comté生産地域の豚を使うのが原則）</dd>
+        <dt>製法</dt><dd>樹脂分の多い針葉樹（サパン、エピセア）で48時間以上の冷燻</dd>
+        <dt>形状</dt><dd>太く短く、片端に木製ピン（cheville）が刺さるのが目印</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">深く強い燻香——他の燻製ソーセージとは別格。重厚でジューシー、肉感が強い。「ジュラの黒い宝石」と呼ばれる。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">レンズ豆煮込み、ポテトサラダ温かいの、Cancoillotte（チーズ）と。Vin Jaune、Savagnin du Jura、Trousseau。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Morteau村の伝統的「Tuyé」（高い円錐形煙突）で燻されるのが本物。これは家屋の中央にある特別な部屋で、何百年も使われている。Cheville（木製ピン）はオリジナリティの証。</p>
+    </div>
+  </article>
+
+  <!-- Saucisse de Montbéliard -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="saucisse-cuire" data-id="saucisse-de-montbeliard-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Saucisse de Montbéliard IGP</h3>
+      <div class="card-name-jp">ソシス・ド・モンベリアール</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Doubs</span>
+        <span class="badge igp">IGP 2013</span>
+        <span class="badge">調理用</span>
+        <span class="badge">燻製</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Franche-Comté</dd>
+        <dt>原料</dt><dd>豚肉（規定品種）、キャラウェイ・コリアンダー</dd>
+        <dt>製法</dt><dd>針葉樹で軽めの冷燻、Morteauより細く小さい</dd>
+        <dt>形状</dt><dd>細長い、150g程度</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Morteauの妹分。より細く、軽い燻香、キャラウェイの清涼感。料理に使いやすい。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Choucroute（ザワークラウト）、レンズ豆と。アペロにグリル。Trousseau、Côtes du Jura白。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Montbéliard市が原産。Peugeot本社のある町でもあり、フランス工業史と結びつく地域。Comté+Morteau+Montbéliardの三点セットがフランシュ＝コンテの「聖三位一体」。</p>
+    </div>
+  </article>
+
+  <!-- Brési -->
+  <article class="card" data-region="fr" data-animal="boeuf" data-family="viande-sechee" data-id="bresi">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Brési</h3>
+      <div class="card-name-jp">ブレジ（ジュラの乾燥牛肉）</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Jura / Doubs / Bugey</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">乾燥牛肉</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Haut-Doubs, Jura, Bugey（CERN北西）</dd>
+        <dt>原料</dt><dd>牛もも肉、塩、ニンニク、ワイン、ハーブ</dd>
+        <dt>製法</dt><dd>塩漬け→針葉樹の冷燻→2〜4ヶ月乾燥</dd>
+        <dt>形状</dt><dd>大きなブロック、極薄スライスで食べる</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">フランス側の「Bündnerfleisch」というべき乾燥牛肉。Bündnerfleischより脂分が残り、燻香が強い。塩味と凝縮感、ヘーゼルナッツ的余韻。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">紙のように薄くスライスで、バターパン・Cancoillotteと。フォンデュの後に。Vin Jaune、Macvin du Jura、Trousseau。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">スイス国境地帯のフランス側で発展。「Brési du Bugey」「Brési du Haut-Doubs」など産地表記が重要。残念ながらAOP/IGP取得には至っていないが、Slow Food Sentinellaに登録されている地域もある。</p>
+    </div>
+  </article>
+
+  <!-- Jambon sec du Bugey -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="jambon-cru" data-id="jambon-sec-du-bugey-des-alpes">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Jambon sec du Bugey / des Alpes</h3>
+      <div class="card-name-jp">ジャンボン・セック・デュ・ビュジェ／デ・ザルプ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Bugey / Alpes</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">生ハム</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Bugey（Ain県、CERN北西）, Savoie, Haute-Savoie</dd>
+        <dt>原料</dt><dd>豚もも肉、塩、ハーブ</dd>
+        <dt>製法</dt><dd>塩漬け→2週間ほど休ませ→7〜18ヶ月乾燥（標高800–1500m）</dd>
+        <dt>熟成</dt><dd>最低7ヶ月</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Bayonneほどしっとりせず、Pata Negraほど脂っぽくない、軽快な山岳生ハム。標高による乾燥環境がイタリア・スペインの低地ハムとは違う質感を生む。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのままアペリティフ、メロン、いちじくと。Cerdon du Bugey（軽い甘口微発泡）、Mondeuse、Apremont。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Brillat-Savarinの故郷Bugeyは、CERNから車で1時間。彼の故郷の食材として記録される。「Jambon des Aravis」「Jambon des Bauges」など、谷ごとに独自の名称あり。</p>
+    </div>
+  </article>
+
+  <!-- Rosette de Lyon -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="saucisson-sec" data-id="rosette-de-lyon">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Rosette de Lyon</h3>
+      <div class="card-name-jp">ロゼット・ド・リヨン</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Lyon</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">乾燥サラミ</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>リヨン地方（Lyonnais, Beaujolais）</dd>
+        <dt>原料</dt><dd>豚もも肉（赤身）＋背脂、塩、香辛料</dd>
+        <dt>製法</dt><dd>豚の直腸（cul de porc, 別名Rosette）に詰めて2〜3ヶ月乾燥</dd>
+        <dt>形状</dt><dd>細長い「水滴型」、800g–1.5kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「サラミの王様」と称される。直腸という丈夫な腸を使うことで、ゆっくりと均一に乾燥し、肉の風味が深く凝縮する。リヨン料理の王道。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">輪切りでパンと。Bouchon lyonnais（リヨンの伝統食堂）の前菜定番。Beaujolais（特にMorgon, Fleurie）、Saint-Joseph。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">リヨンはフランス美食の首都で、「Capitale de la Gastronomie」を自称。Paul Bocuseの本拠地。CERNから車で2時間、TGVで1.5時間——シャルキュトリーとワインの聖地巡礼の起点として最高。</p>
+    </div>
+  </article>
+
+  <!-- Jésus de Lyon -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="saucisson-sec" data-id="jesus-de-lyon-jesus-de-morteau">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Jésus de Lyon / Jésus de Morteau</h3>
+      <div class="card-name-jp">ジェズス（イエス様の意）</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Lyon / Morteau</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">乾燥サラミ</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Lyon版（乾燥サラミ）／Morteau版（燻製ソーセージの大きいバージョン）</dd>
+        <dt>原料</dt><dd>Rosetteと同様、より粗く挽いた豚肉</dd>
+        <dt>形状</dt><dd>洋ナシ型・赤ちゃんを布で包んだような形——名前の由来</dd>
+        <dt>熟成</dt><dd>3〜5ヶ月（Lyon版）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Rosetteの大型版・粗挽きバージョン。挽きが粗い分、肉の食感がしっかり残り、より野性的な味わい。クリスマス頃に売り場に並ぶ伝統。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">輪切りでパン・赤ワイン。Lyon版はBeaujolais、Morteau版（茹で）はSavagnin。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">名前は「赤ちゃんイエスを布に包んだ形」から。冒涜的でも何でもなく、敬意を込めた古い名称。クリスマスの祝祭食として伝統的に食べられた。Jésus de Morteauは茹でて食べる別物なので混同注意。</p>
+    </div>
+  </article>
+
+  <!-- Andouillette -->
+  <article class="card" data-region="fr" data-animal="porc" data-family="abats" data-id="andouillette-de-lyon-aaaaa">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Andouillette de Lyon AAAAA</h3>
+      <div class="card-name-jp">アンドゥイエット・ド・リヨン（5A）</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Lyon</span>
+        <span class="badge">5A協会認定</span>
+        <span class="badge">内臓</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Lyon, Bourgogne, Troyes（地方ごとにレシピ異なる）</dd>
+        <dt>原料</dt><dd>豚の腸・胃などの内臓、香辛料</dd>
+        <dt>製法</dt><dd>内臓を刻む（リヨン式）／縦に細長く繊維状にする（Troyes式）</dd>
+        <dt>調理</dt><dd>グリル、フライパン、白ワインで温める</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">強烈な内臓香で、好き嫌いがはっきり分かれる。「AAAAA」は「Association Amicale des Amateurs d'Andouillette Authentique」（本物アンドゥイエット愛好家友好協会）認定品。本物と工業品の差が大きい食品の代表。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">マスタードと焼く、白ワインで煮込む（Andouillette à la lyonnaise）。Chablis、Sauvignon de Touraine、Crozes-Hermitage。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">リヨンのBouchonの定番。「アンモニア香」と表現されることもあるが、本物の5Aは芳醇な複雑香。一度食べると忘れられない一品。CERN滞在中にBouchon lyonnaisで体験する価値あり。</p>
+    </div>
+  </article>
+
+</div>
+
+<!-- =================== NORD ITALIA =================== -->
+<h2 id="italia" class="group-heading">北イタリア Nord Italia <span class="count">13 items</span></h2>
+<div class="grid">
+
+  <!-- Prosciutto di Parma -->
+  <article class="card" data-region="it" data-animal="porc" data-family="jambon-cru" data-id="prosciutto-di-parma-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Prosciutto di Parma DOP</h3>
+      <div class="card-name-jp">プロシュット・ディ・パルマ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">生ハム</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>パルマ県の丘陵地帯（標高900m以下）</dd>
+        <dt>原料</dt><dd>豚もも肉のみ（規定品種・養豚地域も限定）、海塩のみ（添加物なし）</dd>
+        <dt>熟成</dt><dd>最低12ヶ月、通常18〜24ヶ月、Riserva 24ヶ月以上</dd>
+        <dt>識別</dt><dd>「五角王冠」の焼印が品質保証</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「生ハムの女王」と称される。塩味は穏やかで甘く、メロウ。Parmigianoのホエー（残乳）で育てた豚——だからParmigianoの近隣で作られる。脂と赤身のバランスが極上。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">メロン、いちじく、グリッシーニと。バゲットとバターで「Prosciutto Burro」もEmilia定番。Lambrusco、Pinot Bianco、Trebbiano。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">ローマ帝国時代から記録があり、カトーが言及。Consorzio del Prosciutto di Parmaが厳格に管理し、Parma郊外のLanghiranoで主要熟成所が集積。年間900万本生産。</p>
+    </div>
+  </article>
+
+  <!-- Prosciutto di San Daniele -->
+  <article class="card" data-region="it" data-animal="porc" data-family="jambon-cru" data-id="prosciutto-di-san-daniele-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Prosciutto di San Daniele DOP</h3>
+      <div class="card-name-jp">プロシュット・ディ・サン・ダニエレ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Friuli</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">生ハム</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>San Daniele del Friuli（フリウリ・ヴェネツィア・ジュリア州、独特の微気候）</dd>
+        <dt>原料</dt><dd>豚もも肉、海塩のみ（蹄付きで熟成）</dd>
+        <dt>熟成</dt><dd>最低13ヶ月、通常16〜26ヶ月</dd>
+        <dt>形状</dt><dd>蹄付き（with hoof）、特徴的なバイオリン型</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Parmaのライバル。より繊細で甘く、Parmaよりさらに塩味が控えめ。山と海の風が交わる微気候による独特の風味。脂が透き通る。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、または白いちじく。Friuli白（Sauvignon, Friulano, Ribolla Gialla）、Prosecco di Conegliano。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">San Danieleの町は標高200mの丘で、アドリア海とアルプスの空気が出会う場所。年間270万本生産（Parmaよりずっと少ない）。蹄を残すのは伝統的な品質保証の証。</p>
+    </div>
+  </article>
+
+  <!-- Culatello di Zibello -->
+  <article class="card" data-region="it" data-animal="porc" data-family="jambon-cru" data-id="culatello-di-zibello-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Culatello di Zibello DOP</h3>
+      <div class="card-name-jp">クラテッロ・ディ・ジベッロ（生ハムの皇帝）</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">生ハム最高峰</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Bassa Parmense（Po川沿いのわずか8つの村）</dd>
+        <dt>原料</dt><dd>豚もも肉の中心の最高部位のみ（皮・骨を取り除く）</dd>
+        <dt>熟成</dt><dd>最低12ヶ月、通常18〜36ヶ月（霧深いPo川流域で）</dd>
+        <dt>形状</dt><dd>洋ナシ型、豚の膀胱で包む</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「生ハムの皇帝」「Re dei Salumi」。Parmaの中でも最高部位だけを取った逸品。ピンクの色、密度の濃い甘み、複雑な余韻。希少で高価。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、可能な限り薄く（紙のように）。マスカルポーネで包む地元の食べ方も。Malvasia di Candia Aromatica、フランチャコルタ、シャンパーニュ。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">14世紀の文献にも登場。Po川流域の霧（nebbia）と湿度が独特の発酵を生む。Verdiの故郷Busseto近郊で発展。Massimo Spigaroliの熟成蔵は世界中の美食家が訪れる。</p>
+    </div>
+  </article>
+
+  <!-- Speck Alto Adige -->
+  <article class="card" data-region="it" data-animal="porc" data-family="jambon-cru" data-id="speck-alto-adige-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Speck Alto Adige IGP</h3>
+      <div class="card-name-jp">スペック・アルト・アディジェ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Alto Adige</span>
+        <span class="badge igp">IGP 1996</span>
+        <span class="badge">生ハム・燻製</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Alto Adige / Südtirol（オーストリア国境のドイツ語圏）</dd>
+        <dt>原料</dt><dd>豚もも肉、海塩、ハーブ・スパイス（ジュニパー、ローレル）</dd>
+        <dt>製法</dt><dd>塩漬け→冷燻（ブナ材）→空気乾燥の独特な二重製法</dd>
+        <dt>熟成</dt><dd>最低22週間</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「半分はProsciutto、半分はSchinken（ドイツ風スモークハム）」を体現する独特の存在。燻香と凝縮された肉味、ジュニパーの清涼感。ドイツ語圏アルプスの伝統と地中海気候の融合。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">輪切りでパンと、Strudelの具に、Knödel（団子）と。Lagrein、Vernatsch、Müller-Thurgau。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Südtirolはオーストリアハプスブルク家統治下にあった時代が長く、料理文化はゲルマン的。Speck Festがあるくらいの地元食。CERNから北イタリアアルプス縦断で行く価値あり（電車で約8時間）。</p>
+    </div>
+  </article>
+
+  <!-- Bresaola -->
+  <article class="card" data-region="it" data-animal="boeuf" data-family="viande-sechee" data-id="bresaola-della-valtellina-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Bresaola della Valtellina IGP</h3>
+      <div class="card-name-jp">ブレザオラ・デッラ・ヴァルテッリーナ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Lombardia</span>
+        <span class="badge igp">IGP 1996</span>
+        <span class="badge">乾燥牛肉</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ヴァルテッリーナ（Sondrio県、ロンバルディアのアルプス）</dd>
+        <dt>原料</dt><dd>牛もも肉（規定品種）、塩、ハーブ、スパイス</dd>
+        <dt>製法</dt><dd>塩漬け2〜3週間→乾燥1〜3ヶ月（標高300m以上の渓谷風）</dd>
+        <dt>熟成</dt><dd>4〜8週間</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Bündnerfleischと並ぶイタリア乾燥牛肉の代表。Bündnerfleischより脂が少なく薄く、優しい塩味、肉の純粋な旨味。低脂質でアスリートに愛される（高タンパク）。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">薄切りにオリーブオイル、レモン、削ったParmigianoで「Bresaola alla Valtellinese」。Sforzato di Valtellina、Inferno、Sassella（Nebbiolo系）。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">中世から、ヴァルテッリーナで作られていた。Bittoチーズと同じ谷の名産。「ブレザオラを食べてヴァルテッリーナのワインを飲む」が地元の標準。</p>
+    </div>
+  </article>
+
+  <!-- Coppa Piacentina -->
+  <article class="card" data-region="it" data-animal="porc" data-family="jambon-cru" data-id="coppa-piacentina-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Coppa Piacentina DOP</h3>
+      <div class="card-name-jp">コッパ・ピアチェンティーナ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">生ハム（首肉）</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Piacenza県</dd>
+        <dt>原料</dt><dd>豚の首肉（capocollo）、塩、香辛料、白ワイン</dd>
+        <dt>熟成</dt><dd>最低6ヶ月（脱水・乾燥・熟成）</dd>
+        <dt>形状</dt><dd>円筒形、赤身と脂のマーブル模様が特徴</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">首肉特有の脂と赤身のマーブル——切り口が芸術的。柔らかく、口の中でとろけ、ハーブの香り。Coppaは地域ごとに微妙に違い、PiacentinaのほかParma, Cremona等もあるが、DOPはPiacentinaのみ。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">輪切りでパン、Gnocco fritto（揚げパン）と。Gutturnio（Piacenzaの赤、Bonarda+Barbera）、Bonarda dell'Oltrepò Pavese。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Piacenzaはイタリア唯一、3つのDOP salumi（Coppa, Pancetta, Salame）を持つ町。豚加工の聖地。「Trittico Piacentino」（ピアチェンツァ三位一体）が地元ブランド。</p>
+    </div>
+  </article>
+
+  <!-- Mortadella Bologna -->
+  <article class="card" data-region="it" data-animal="porc" data-family="charcuterie-cuite" data-id="mortadella-bologna-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Mortadella Bologna IGP</h3>
+      <div class="card-name-jp">モルタデッラ・ボローニャ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia-Romagna</span>
+        <span class="badge igp">IGP 1998</span>
+        <span class="badge">加熱済</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Emilia-Romagna全域＋Veneto, Piemonte, Trentino, Toscana, Marche, Lazio, Lombardia</dd>
+        <dt>原料</dt><dd>豚肉細挽きエマルジョン＋豚脂キューブ15%、香辛料、ピスタチオ（オプション）</dd>
+        <dt>製法</dt><dd>蒸気加熱（コア温度70°C以上）</dd>
+        <dt>形状</dt><dd>巨大円筒、最大100kg以上のものも</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">柔らかく弾力のあるエマルジョン、白い脂のキューブが宝石のよう。マイルドな塩味、コリアンダー・コショウのアクセント。極薄スライスで食べるのが正解。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま薄切り、Pizza、Tortellini in brodoの具材、パニーノ。Lambrusco di Sorbara（重要——脂を切る発泡感）、Pignoletto。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">15世紀以前から。「ボロネーゼ」「ボローニャ風」料理の根幹を支える食材。アメリカで「Bologna」と呼ばれる薄いハムは、これの劣化版。本場の細やかな仕事を実体験すべき。</p>
+    </div>
+  </article>
+
+  <!-- Salame Felino -->
+  <article class="card" data-region="it" data-animal="porc" data-family="saucisson-sec" data-id="salame-felino-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Salame Felino IGP</h3>
+      <div class="card-name-jp">サラーメ・フェリーノ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia</span>
+        <span class="badge igp">IGP 2014</span>
+        <span class="badge">乾燥サラミ</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Parma県（Felino村周辺）</dd>
+        <dt>原料</dt><dd>豚肉70%、豚背脂30%、塩、白胡椒、白ワイン、ニンニク</dd>
+        <dt>製法</dt><dd>粗挽き、緩い詰め込み</dd>
+        <dt>熟成</dt><dd>最低25日、伝統的には2〜3ヶ月</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「サラミの女王」と呼ばれる繊細なエミリア風。スパイスが控えめでマイルド、肉の純粋な旨味、白ワインのニュアンス。長い1本を斜めに長く薄くカットするのが地元式。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">パンと、Parmigianoと一緒に。Lambrusco、Malvasia dei Colli di Parma、Trebbiano。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Parma県のFelino村にはSalami博物館がある。Garibaldiが愛したと伝わる。スーパーで「Salame」と書いてある安価品とは別物——本物は丘陵の特定地域で作られる。</p>
+    </div>
+  </article>
+
+  <!-- Salame Milano -->
+  <article class="card" data-region="it" data-animal="porc" data-family="saucisson-sec" data-id="salame-milano">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Salame Milano</h3>
+      <div class="card-name-jp">サラーメ・ミラノ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Lombardia</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">乾燥サラミ</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ロンバルディア全域（旧Milanoの工業地帯由来）</dd>
+        <dt>原料</dt><dd>豚肉＋牛肉少量＋豚脂、ニンニク、白ワイン、香辛料</dd>
+        <dt>製法</dt><dd>非常に細かい挽き（grano di riso＝米粒大）</dd>
+        <dt>熟成</dt><dd>1〜3ヶ月</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">細挽きで均一な見た目、赤身と脂が「米粒」サイズで規則正しく並ぶ。マイルドで誰でも食べやすい。スーパーで最も普通に見るサラミがこれ。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">パニーノ、アペリティフ、ピザに。気軽な赤、Barbera、Bonarda。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">19世紀後半のミラノ工業化で大量生産が始まり、イタリアで最もポピュラーなサラミに。Felinoが「女王」ならMilanoは「市民派」。DOP/IGPは取得していないが、商標で広く認知。</p>
+    </div>
+  </article>
+
+  <!-- Lardo di Colonnata -->
+  <article class="card" data-region="it" data-animal="porc" data-family="lard" data-id="lardo-di-colonnata-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Lardo di Colonnata IGP</h3>
+      <div class="card-name-jp">ラルド・ディ・コロンナータ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Toscana</span>
+        <span class="badge igp">IGP 2004</span>
+        <span class="badge">脂肪系</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Colonnata村（Carrara、有名な大理石採石場の中）</dd>
+        <dt>原料</dt><dd>豚背脂、塩、ローズマリー、ニンニク、コショウ、ナツメグ、シナモン</dd>
+        <dt>製法</dt><dd>カラーラ大理石の桶（conca）で6ヶ月以上熟成</dd>
+        <dt>形状</dt><dd>大理石桶から取り出した塊から薄くスライス</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「白い宝石」。極薄スライスで、舌の上でとろける脂と熟成された複雑なスパイス香。Carraraの大理石が温度・湿度を一定に保つ天然冷蔵庫として機能する。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">温かいトスカーナパンに乗せて——熱で脂が溶ける瞬間が至福。アンティパストの定番。Chianti Classico、Vernaccia di San Gimignano、Spumante Metodo Classico。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">ローマ時代から、Carrara大理石採掘の労働者の高カロリー食として。Michelangeloも食べたかもしれない。CERN→Carraraは電車で約6時間、訪問する価値あり。</p>
+    </div>
+  </article>
+
+  <!-- Lardo d'Arnad -->
+  <article class="card" data-region="it" data-animal="porc" data-family="lard" data-id="vallee-daoste-lard-darnad-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Vallée d'Aoste Lard d'Arnad DOP</h3>
+      <div class="card-name-jp">ラルド・ダルナド（ヴァッレ・ダオスタ）</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Valle d'Aosta</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">脂肪系</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Arnad村（モンブラントンネル側のヴァッレ・ダオスタ）</dd>
+        <dt>原料</dt><dd>豚肩脂（少なくとも9ヶ月育てた160kg以上の豚）、海塩、ハーブ（ローズマリー、セージ、ジュニパー、ローレル、ナツメグ）</dd>
+        <dt>製法</dt><dd>「Doil」と呼ばれる栗の木の桶で塩漬け＋ハーブ漬け</dd>
+        <dt>熟成</dt><dd>最低3ヶ月</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Lardo di Colonnataと並ぶイタリア二大ラルド。Colonnataより脂の質が硬めでハーブ香が強い（高地の冷涼さによる）。栗の木の桶からくるタンニンの繊細な渋み。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">蜂蜜・栗・黒パンと「Trio valdostano」がアオスタの定番。Petite Arvine、Cornalin、Picotendro。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">1570年から記録あり。サヴォワからモンブラントンネルでイタリア側に抜けるとすぐ、Lardo d'Arnadの里がある。CERN→Chamonix→Mont Blancトンネル→Aostaは1日往復可能で、フランスとイタリアの境界文化を一気に味わえる遠足ルート。</p>
+    </div>
+  </article>
+
+  <!-- Cotechino / Zampone -->
+  <article class="card" data-region="it" data-animal="porc" data-family="saucisse-cuire" data-id="cotechino-and-zampone-modena-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Cotechino &amp; Zampone Modena IGP</h3>
+      <div class="card-name-jp">コテキーノ／ザンポーネ・ディ・モデナ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia</span>
+        <span class="badge igp">IGP 1999</span>
+        <span class="badge">調理用</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Modena, Mantova, Cremona, Ferrara, Reggio Emilia等</dd>
+        <dt>原料</dt><dd>豚肉＋豚皮（couenne）＋脂、スパイス</dd>
+        <dt>製法</dt><dd>Cotechinoは普通の腸詰、Zamponeは豚の前脚の皮を詰めた特殊形状</dd>
+        <dt>調理</dt><dd>水から3〜4時間ゆっくり茹でる</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">皮のゼラチン質が肉と混ざり、独特のとろける食感。塩味、スパイス、深い旨味。茹で上がりは少しソフトでリッチ。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">大晦日にレンズ豆（lenticchie＝幸運のシンボル）と食べるのがイタリア全土の伝統。Mostarda di Cremonaを添える。Lambrusco（Sorbaraの辛口）、Bonarda dell'Oltrepò。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">1511年、Mirandolaがフランス軍に包囲されたとき、市民が手持ちの豚で発明したと伝わる。年末年始の食卓に欠かせず、12月のスーパーでは予冷済みパックが山積みになる。</p>
+    </div>
+  </article>
+
+  <!-- Mocetta -->
+  <article class="card" data-region="it" data-animal="boeuf" data-family="viande-sechee" data-id="motzetta-mocetta-valdostana">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Motzetta / Mocetta valdostana</h3>
+      <div class="card-name-jp">モチェッタ（ヴァッレ・ダオスタの乾燥肉）</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Valle d'Aosta</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">乾燥肉</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ヴァッレ・ダオスタ全域</dd>
+        <dt>原料</dt><dd>伝統的にシャモア（カモシカ）または山羊、現在は牛もも肉が一般的</dd>
+        <dt>製法</dt><dd>ハーブ・スパイス・ワインに漬ける→2〜3ヶ月乾燥</dd>
+        <dt>熟成</dt><dd>2〜4ヶ月</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">アオスタ版BresaolaまたはBündnerfleisch。シャモア・山羊版は野性的で、牛版はマイルド。山岳ハーブの香りが豊か。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">薄切りに黒パン・蜂蜜・Lardo d'Arnadと一緒に「Trio valdostano」。Fumin、Petit Rouge、Cornalin。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">アルプス越境文化の象徴で、サヴォワのBrési、スイスのBündnerfleischと同じ「乾燥肉ファミリー」。狩猟文化と保存技術の融合。アオスタの市場や山小屋で。</p>
+    </div>
+  </article>
+
+</div>
+
+
+<nav class="detail-nav" aria-label="Item navigation bottom">
+  <button type="button" data-direction="prev">← 前のアイテム</button>
+  <button type="button" data-direction="next">次のアイテム →</button>
+</nav>
+
+<footer class="colophon">
+  <p><strong>Charcuterie Atlas v0.1</strong> — Personal field guide compiled 2026-05, CERN/Geneva</p>
+  <p>次バージョン予定：(1) 写真の追加 (2) 試食メモ・購入店舗（fromagerie, boucherie, salumeria）のフィールドログ (3) パテ・テリーヌ・リエット系の追加 (4) ジビエ（gibier / selvaggina）編 (5) 各産地のワインとの詳細ペアリング表</p>
+  <p>姉妹ページ：<a href="cheese-atlas.html">Cheese Atlas</a></p>
+  <p>References: <a href="https://www.aop-igp.ch/" target="_blank">Swiss PDO-PGI Association</a> · <a href="https://www.inao.gouv.fr/" target="_blank">INAO France</a> · <a href="https://www.politicheagricole.it/" target="_blank">MIPAAF Italia</a> · <a href="https://www.patrimoineculinaire.ch/" target="_blank">Patrimoine culinaire suisse</a> · Wikipedia (FR/IT/EN/DE) · TasteAtlas · Slow Food Presidi</p>
+  <p>©2026 — Personal study project, non-commercial.</p>
+</footer>
+
+</div>
+
+<script>
+  const state = { region: 'all', animal: 'all', family: 'all' };
+  const chips = document.querySelectorAll('.chip');
+  const cards = document.querySelectorAll('.card');
+  const groupHeadings = document.querySelectorAll('.group-heading');
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const filterType = chip.dataset.filter;
+      const value = chip.dataset.value;
+      state[filterType] = value;
+      document.querySelectorAll(`.chip[data-filter="${filterType}"]`).forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    let visibleCounts = { ch: 0, fr: 0, it: 0 };
+    cards.forEach(card => {
+      const r = card.dataset.region;
+      const a = card.dataset.animal;
+      const f = card.dataset.family;
+      const match =
+        (state.region === 'all' || state.region === r) &&
+        (state.animal === 'all' || state.animal === a) &&
+        (state.family === 'all' || state.family === f);
+      card.classList.toggle('hidden', !match);
+      if (match) visibleCounts[r] = (visibleCounts[r] || 0) + 1;
+    });
+    groupHeadings.forEach(h => {
+      const id = h.id;
+      const region = id === 'suisse' ? 'ch' : id === 'savoie' ? 'fr' : 'it';
+      const count = visibleCounts[region] || 0;
+      h.classList.toggle('hidden', count === 0);
+      const cspan = h.querySelector('.count');
+      if (cspan) cspan.textContent = `${count} item${count !== 1 ? 's' : ''}`;
+    });
+  }
+  // =================== Detail view system ===================
+  (function() {
+    const cards = Array.from(document.querySelectorAll('.card[data-id]'));
+    const cardById = new Map(cards.map(c => [c.dataset.id, c]));
+    let savedScroll = 0;
+
+    function showDetail(id) {
+      const card = cardById.get(id);
+      if (!card) return false;
+      document.querySelectorAll('.card.is-active').forEach(c => c.classList.remove('is-active'));
+      card.classList.add('is-active');
+      document.body.classList.add('detail-mode');
+      updateDetailNav(id);
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      return true;
+    }
+
+    function hideDetail() {
+      document.body.classList.remove('detail-mode');
+      document.querySelectorAll('.card.is-active').forEach(c => c.classList.remove('is-active'));
+      // Restore scroll position from before entering detail mode
+      window.scrollTo({ top: savedScroll, behavior: 'auto' });
+    }
+
+    function visibleCards() {
+      // Only those not hidden by filters
+      return cards.filter(c => !c.classList.contains('hidden'));
+    }
+
+    function updateDetailNav(currentId) {
+      const visible = visibleCards();
+      // Fall back to all cards if active card was filtered out
+      const list = visible.find(c => c.dataset.id === currentId) ? visible : cards;
+      const idx = list.findIndex(c => c.dataset.id === currentId);
+      const prevBtn = document.querySelector('.detail-nav button[data-direction="prev"]');
+      const nextBtn = document.querySelector('.detail-nav button[data-direction="next"]');
+      if (!prevBtn || !nextBtn) return;
+      prevBtn.disabled = idx <= 0;
+      nextBtn.disabled = idx === -1 || idx >= list.length - 1;
+      prevBtn.dataset.targetId = idx > 0 ? list[idx - 1].dataset.id : '';
+      nextBtn.dataset.targetId = (idx >= 0 && idx < list.length - 1) ? list[idx + 1].dataset.id : '';
+    }
+
+    function handleHash() {
+      const hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash && cardById.has(hash)) {
+        showDetail(hash);
+      } else {
+        hideDetail();
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        if (document.body.classList.contains('detail-mode')) return;
+        savedScroll = window.scrollY;
+        const id = card.dataset.id;
+        if (id) window.location.hash = id;
+      });
+    });
+
+    document.querySelectorAll('.back-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+        hideDetail();
+      });
+    });
+
+    document.querySelectorAll('.detail-nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.targetId;
+        if (id) window.location.hash = id;
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!document.body.classList.contains('detail-mode')) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+        hideDetail();
+      } else if (e.key === 'ArrowLeft') {
+        const prev = document.querySelector('.detail-nav button[data-direction="prev"]');
+        if (prev && !prev.disabled) prev.click();
+      } else if (e.key === 'ArrowRight') {
+        const next = document.querySelector('.detail-nav button[data-direction="next"]');
+        if (next && !next.disabled) next.click();
+      }
+    });
+
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
+  })();
+
+</script>
+
+</body>
+</html>

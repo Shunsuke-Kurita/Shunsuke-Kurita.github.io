@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheese Atlas — Suisse, Savoie, Nord Italia</title>
+<style>
+  :root {
+    --bg: #fbf8f2;
+    --paper: #ffffff;
+    --ink: #1f1d1a;
+    --ink-soft: #4a463f;
+    --ink-muted: #7a7368;
+    --rule: #e6dfd1;
+    --accent: #9a2a2a;
+    --accent-soft: #c97a4a;
+    --gold: #b88a3e;
+    --ch: #d5453a;
+    --fr: #2f4ea3;
+    --it: #2a8a4a;
+    --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+    --serif: "Cormorant Garamond", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", Georgia, serif;
+    --sans: "Inter", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 28px 96px;
+  }
+
+  /* Header */
+  header.masthead {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .subtitle {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+  .intro {
+    max-width: 64ch;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+  .intro p { margin: 0 0 10px; }
+
+  /* Sibling link */
+  .sibling-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    margin-top: 18px;
+    transition: all 0.15s ease;
+  }
+  .sibling-nav:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .sibling-nav::after { content: "→"; }
+
+  /* Meta strip */
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px 36px;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+  }
+  .meta-strip span strong {
+    color: var(--ink);
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  /* Filter bar */
+  .filters {
+    position: sticky;
+    top: 0;
+    background: rgba(251, 248, 242, 0.94);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    padding: 16px 0;
+    margin: 8px 0 28px;
+    border-bottom: 1px solid var(--rule);
+    z-index: 20;
+  }
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .filter-group:last-child { margin-bottom: 0; }
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-right: 6px;
+    min-width: 64px;
+  }
+  .chip {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    padding: 5px 11px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .chip:hover {
+    border-color: var(--ink-soft);
+    color: var(--ink);
+  }
+  .chip.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .chip .count {
+    font-family: var(--mono);
+    font-size: 10px;
+    opacity: 0.6;
+    margin-left: 4px;
+  }
+
+  /* Section heading between groups */
+  .group-heading {
+    grid-column: 1 / -1;
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 36px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .group-heading .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Cards grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 22px;
+  }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover {
+    box-shadow: var(--shadow);
+  }
+
+  .card-photo {
+    aspect-ratio: 16 / 10;
+    background:
+      repeating-linear-gradient(45deg, #f3ece0 0 8px, #efe6d6 8px 16px);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .card-photo::after {
+    content: "PHOTO";
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--ink-muted);
+    opacity: 0.55;
+  }
+  .card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card-photo img + ::after { display: none; }
+
+  .card-body {
+    padding: 18px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 1.45rem;
+    line-height: 1.15;
+    margin: 0 0 4px;
+    color: var(--ink);
+  }
+  .card-name-jp {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--bg);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+  }
+  .badge.aop { background: #fdf5e8; border-color: #ecd7a4; color: #8a6212; }
+  .badge.dop { background: #fdf5e8; border-color: #ecd7a4; color: #8a6212; }
+  .badge.igp { background: #f0f5e8; border-color: #c9d8a4; color: #5b701f; }
+  .badge.ch { background: #fbeaea; color: var(--ch); border-color: #f3c8c8; }
+  .badge.fr { background: #e8edf8; color: var(--fr); border-color: #c7d4eb; }
+  .badge.it { background: #e6f3ea; color: var(--it); border-color: #b9dcc4; }
+
+  .specs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    row-gap: 6px;
+    font-size: 0.86rem;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border-radius: 4px;
+  }
+  .specs dt {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding-top: 2px;
+  }
+  .specs dd {
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 12px 0 4px;
+  }
+  .section-body {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .section-body + .section-title { margin-top: 14px; }
+
+  /* Index TOC */
+  .toc {
+    margin: 12px 0 32px;
+    padding: 18px 22px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    font-size: 0.88rem;
+  }
+  .toc h3 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin: 0 0 10px;
+    font-weight: 600;
+  }
+  .toc ul { margin: 0; padding: 0; list-style: none; columns: 3; column-gap: 22px; }
+  .toc li { padding: 2px 0; break-inside: avoid; }
+  .toc a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted transparent; }
+  .toc a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Footer */
+  footer.colophon {
+    margin-top: 64px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    font-family: var(--sans);
+  }
+  footer.colophon p { margin: 0 0 6px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 720px) {
+    .container { padding: 28px 18px 60px; }
+    .toc ul { columns: 1; }
+    .filter-label { min-width: auto; width: 100%; margin-bottom: 4px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    .filters, footer.colophon { display: none; }
+    .card { break-inside: avoid; }
+  }
+
+  /* =================== DETAIL VIEW SYSTEM =================== */
+  .card { cursor: pointer; }
+  .card .specs,
+  .card .section-title,
+  .card .section-body { display: none; }
+  .card-body { padding-bottom: 18px; }
+
+  /* Detail mode: hide everything except active card */
+  body.detail-mode .group-heading,
+  body.detail-mode .filters,
+  body.detail-mode nav.toc,
+  body.detail-mode .diagrams,
+  body.detail-mode .card:not(.is-active) { display: none !important; }
+  body.detail-mode .grid { display: contents; }
+  body.detail-mode .card.is-active {
+    display: flex !important;
+    cursor: default;
+    max-width: 760px;
+    margin: 24px auto;
+    border-color: var(--ink);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  }
+  body.detail-mode .card.is-active:hover { transform: none; }
+  body.detail-mode .card.is-active .specs { display: grid; }
+  body.detail-mode .card.is-active .section-title,
+  body.detail-mode .card.is-active .section-body { display: block; }
+  body.detail-mode .card.is-active .card-photo { aspect-ratio: 21 / 9; }
+  body.detail-mode .card.is-active .card-body { padding: 24px 28px 28px; }
+
+  /* Shrink masthead in detail mode for focus on item */
+  body.detail-mode header.masthead {
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+  }
+  body.detail-mode header.masthead .eyebrow,
+  body.detail-mode header.masthead .subtitle,
+  body.detail-mode header.masthead .intro,
+  body.detail-mode header.masthead .meta-strip { display: none; }
+  body.detail-mode header.masthead h1 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+  body.detail-mode header.masthead h1 em { font-style: normal; color: var(--ink-muted); }
+
+  /* Back button */
+  .back-btn {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    background: var(--paper);
+    cursor: pointer;
+    margin: 0 0 8px;
+    transition: all 0.15s ease;
+    font-weight: 600;
+  }
+  .back-btn:hover { background: var(--ink); color: var(--bg); }
+  body.detail-mode .back-btn { display: inline-flex; }
+
+  /* Prev/Next navigation in detail mode */
+  .detail-nav {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto 32px;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  body.detail-mode .detail-nav { display: flex; }
+  .detail-nav button {
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 10px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .detail-nav button:hover:not(:disabled) {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .detail-nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Mobile tweaks */
+  @media (max-width: 720px) {
+    body.detail-mode .card.is-active {
+      margin: 12px 0 16px;
+      max-width: 100%;
+    }
+    body.detail-mode .card.is-active .card-body { padding: 18px 18px 20px; }
+    .detail-nav { max-width: 100%; margin: 0 0 24px; }
+    .detail-nav button { font-size: 10px; padding: 9px 8px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="masthead">
+  <div class="eyebrow">A personal field guide · v0.1 · 2026</div>
+  <h1>Cheese Atlas <em>—</em> Suisse · Savoie · Nord Italia</h1>
+  <p class="subtitle">CERN周辺で出会えるチーズの個人的フィールドガイド</p>
+  <div class="intro">
+    <p>ジュネーヴ・CERN周辺は、ヨーロッパでも稀有なチーズ密集地帯。北のジュラ山脈、南のサヴォワ・アルプス、東のスイス山岳地帯、そして峠を越えればイタリア・ヴァッレ・ダオスタやピエモンテ。半径200kmに、フランスAOP・スイスAOP・イタリアDOPが密集している。</p>
+    <p>このアトラスは、スーパー（Migros, Coop, Manor, La Vache qui Tracte, Aligro等）や近郊のfromagerieで実際に手に入るものを中心に、地域・原料・熟成・味・歴史をまとめた個人的開拓記録。順次、自分で撮った写真と試食メモを追記していく予定。</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="charcuterie-atlas.html" class="sibling-nav">Charcuterie Atlas</a>
+      <a href="meat-cuts-atlas.html" class="sibling-nav">Meat Cuts Atlas</a>
+    </div>
+  </div>
+  <div class="meta-strip">
+    <span><strong>32</strong>cheeses</span>
+    <span><strong>3</strong>regions</span>
+    <span><strong>25</strong>AOP / DOP</span>
+    <span><strong>updated</strong>2026-05</span>
+  </div>
+</header>
+<button class="back-btn" type="button">← 一覧に戻る</button>
+
+<nav class="detail-nav" aria-label="Item navigation">
+  <button type="button" data-direction="prev">← 前のアイテム</button>
+  <button type="button" data-direction="next">次のアイテム →</button>
+</nav>
+
+
+
+<nav class="toc">
+  <h3>Index</h3>
+  <ul>
+    <li><a href="#suisse">スイス (11)</a></li>
+    <li><a href="#savoie">サヴォワ・ジュラ (9)</a></li>
+    <li><a href="#italia">北イタリア (12)</a></li>
+  </ul>
+</nav>
+
+<div class="filters" id="filters">
+  <div class="filter-group">
+    <span class="filter-label">Region</span>
+    <button class="chip active" data-filter="region" data-value="all">All</button>
+    <button class="chip" data-filter="region" data-value="ch">🇨🇭 Suisse</button>
+    <button class="chip" data-filter="region" data-value="fr">🇫🇷 Savoie · Jura</button>
+    <button class="chip" data-filter="region" data-value="it">🇮🇹 Nord Italia</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Milk</span>
+    <button class="chip active" data-filter="milk" data-value="all">All</button>
+    <button class="chip" data-filter="milk" data-value="vache">牛 Vache</button>
+    <button class="chip" data-filter="milk" data-value="chevre">山羊 Chèvre</button>
+    <button class="chip" data-filter="milk" data-value="brebis">羊 Brebis</button>
+    <button class="chip" data-filter="milk" data-value="melange">混合</button>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Family</span>
+    <button class="chip active" data-filter="family" data-value="all">All</button>
+    <button class="chip" data-filter="family" data-value="cuite">硬質加熱圧搾</button>
+    <button class="chip" data-filter="family" data-value="noncuite">硬質非加熱圧搾</button>
+    <button class="chip" data-filter="family" data-value="lavee">ウォッシュ</button>
+    <button class="chip" data-filter="family" data-value="molle">白カビ・モレ</button>
+    <button class="chip" data-filter="family" data-value="bleu">青カビ</button>
+    <button class="chip" data-filter="family" data-value="fraiche">フレッシュ</button>
+  </div>
+</div>
+
+<!-- =================== SUISSE =================== -->
+<h2 id="suisse" class="group-heading">スイス Suisse <span class="count">11 cheeses</span></h2>
+<div class="grid">
+
+  <!-- Gruyère -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="cuite" data-id="gruyere-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Gruyère AOP</h3>
+      <div class="card-name-jp">グリュイエール</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2001</span>
+        <span class="badge">硬質加熱圧搾</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Fribourg, Vaud, Neuchâtel, Jura, Berne</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（raw cow's milk）</dd>
+        <dt>熟成</dt><dd>最低5ヶ月、Réserve 10ヶ月、Vieux/Surchoix 15ヶ月以上</dd>
+        <dt>形状</dt><dd>円盤型 25–40kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">若いものはミルキーで甘く、ナッツ様。熟成が進むと結晶（チロシン）がジャリッとし、塩味と旨味が増す。Vieuxはほぼ味噌に近い旨味の濃度。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">フォンデュの主役（moitié-moitié = Gruyère + Vacherin Fribourgeois 半々）。単体ならChasselas（La Côte, Lavaux）と。熟成Réserveは赤ワイン（Pinot Noir de Neuchâtel, Cornalin du Valais）も合う。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">12世紀から記録があるGruyères村が原産。フランスの「Gruyère IGP」とは別物（穴のあり/なしも違う）。実はスイス版Gruyère AOPは穴がない（規格通り）。</p>
+    </div>
+  </article>
+
+  <!-- Emmentaler -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="cuite" data-id="emmentaler-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Emmentaler AOP</h3>
+      <div class="card-name-jp">エメンタール</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2006</span>
+        <span class="badge">硬質加熱圧搾</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Berne, Lucerne, Aargau, Zürich, Thurgau, St. Gallen</dd>
+        <dt>原料</dt><dd>無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>最低4ヶ月（Classic）、Réserve 8ヶ月以上、Höhlengereift 12ヶ月以上</dd>
+        <dt>形状</dt><dd>巨大ホイール 75–120kg、穴あり（チェリーサイズ）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">甘くマイルド、ヘーゼルナッツのような香り。「チーズの王様」と呼ばれる本場物は工業エメンタールとは別物——熟成ものは複雑で力強い。穴（Löcher）はPropionibacterium freudenreichiiの代謝でできるCO₂。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、サンドイッチ、グラタン。Höhlengereift（洞窟熟成）はChasselasよりむしろ辛口の白（Petite Arvineなど）が合う。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">13世紀のエメ渓谷（Emmental）が原産。実は近年、本場スイスEmmentalerの生産は減少傾向で、希少化しつつある。スーパーで見かける「Emmental」の多くはフランス産IGPなどの別物。</p>
+    </div>
+  </article>
+
+  <!-- Vacherin Fribourgeois -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="noncuite" data-id="vacherin-fribourgeois-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Vacherin Fribourgeois AOP</h3>
+      <div class="card-name-jp">ヴァシュラン・フリブルジョワ</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2005</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・フリブール</dd>
+        <dt>原料</dt><dd>無殺菌または低温殺菌牛乳</dd>
+        <dt>熟成</dt><dd>9〜25週間（タイプにより異なる）</dd>
+        <dt>形状</dt><dd>円盤型 6–9kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">しっとり半硬質、よく溶ける。バターやクリーム、軽い森の香り。Vacherin Mont-d'Orとは全く別物（こちらは硬めで通年生産）。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">フリブール式フォンデュ（Fondue fribourgeoise）はこれ100%（純Vacherin）または半々（Moitié-moitié）が定番。Chasselas、Fendant du Valais。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">18世紀から記録あり。フォンデュ・モワティエ・モワティエは「2つのAOPを半々」というルールがちゃんとあり、フリブール州法で守られた組合せ。</p>
+    </div>
+  </article>
+
+  <!-- Vacherin Mont-d'Or -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="lavee" data-id="vacherin-mont-dor-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Vacherin Mont-d'Or AOP</h3>
+      <div class="card-name-jp">ヴァシュラン・モンドール</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2003</span>
+        <span class="badge">ウォッシュ</span>
+        <span class="badge">季節限定</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ヴォー（Vallée de Joux周辺）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Montbéliardeなど指定品種）</dd>
+        <dt>熟成</dt><dd>17日以上、エピセア（spruce）の樹皮で巻く</dd>
+        <dt>季節</dt><dd>9月〜翌春のみ（牛が舎飼いの時期）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">スプーンですくえるほど柔らかい中身（pâte coulante）。樹皮由来の樹脂の香り、ミルクの甘み、ウォッシュ由来のコク。冬の風物詩。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">箱ごとオーブンに入れ、白ワインとニンニクを垂らして焼く「Boîte chaude」が定番。ジャガイモと共に。Côtes du Jura白、Vin Jaune、軽めのChasselas。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">フランス側の「Mont d'Or AOP」（Doubs県）と双子の存在。1987年のリステリア騒動で一時的に大打撃を受けたが、衛生管理を強化し復活。Vallée de Jouxは時計産業（Audemars Piguet等）でも有名な谷。</p>
+    </div>
+  </article>
+
+  <!-- Tête de Moine -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="noncuite" data-id="tete-de-moine-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Tête de Moine AOP</h3>
+      <div class="card-name-jp">テット・ド・モワンヌ（修道士の頭）</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2001</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>ジュラ・ベルノワ（Bellelay修道院周辺）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>最低75日（夏ミルク）／90日（冬ミルク）</dd>
+        <dt>形状</dt><dd>円筒形 700g–2kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">削って花のように見せるのが特徴（girolle）。空気に触れることで香りが立つ——ヘーゼルナッツ、わずかな獣香、長い余韻。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">専用器具「Girolle」で削るのが正式。アペリティフに最適。シャンパーニュ、Pinot Noir de Neuchâtel、Gewürztraminer。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">12世紀、ベルレ修道院で修道士が作り始めた。当時のチーズ年貢を「修道士の頭1個」と数えたことが名前の由来。Girolleは1981年Nicolas Crevoisierがスイスで発明した近代的器具。</p>
+    </div>
+  </article>
+
+  <!-- Appenzeller -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="lavee" data-id="appenzeller">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Appenzeller</h3>
+      <div class="card-name-jp">アッペンツェラー</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge">商標保護（AOP出願中）</span>
+        <span class="badge">ウォッシュ</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>アッペンツェル州、サンクトガレン</dd>
+        <dt>原料</dt><dd>無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>Classic 3–4ヶ月、Surchoix 4–6ヶ月、Extra/Black Label 6ヶ月以上</dd>
+        <dt>特徴</dt><dd>秘伝のハーブ塩水（Sulz）でウォッシュ</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">ハーブとスパイスの複雑な香り。Extra（黒ラベル）はパンチが強く、好き嫌いが分かれる強烈な香り。中身は密度が高くしっとり。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">単体でビール、辛口リースリング、Pinot Noir。料理にも使いやすい。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">700年以上の歴史。Sulz（ハーブ塩水）のレシピは現在も非公開で、わずか2人の人物しか知らないと言われる。AOPではなく登録商標で管理されているのは独特。</p>
+    </div>
+  </article>
+
+  <!-- Raclette du Valais -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="noncuite" data-id="raclette-du-valais-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Raclette du Valais AOP</h3>
+      <div class="card-name-jp">ラクレット・デュ・ヴァレー</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2007</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ヴァレー（5地区：Bagnes, Conches, Goms, Orsières, Hérens等）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（ヴァレー牛＝Hérens種を含む）</dd>
+        <dt>熟成</dt><dd>最低3ヶ月（削りチーズHobelkäseは9ヶ月以上）</dd>
+        <dt>形状</dt><dd>円盤型 約5kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">他のラクレット用チーズと違い、AOP版は地域・アルパージュ別に味が明確に違う。Bagnes、Hérens、Conchesなど、産地名が書かれた商品が市場に並ぶ。とろける食感、フルーティでハーブ的。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">半分を炙って削り、ジャガイモ・コルニション・玉ねぎの酢漬けと。Fendant（Chasselas valaisan）、Petite Arvine、Heidaが定番。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">14世紀のヴァレー山岳地帯で羊飼いが暖炉で炙って食べていたのが起源。スイス側は「Raclette du Valais AOP」が正統で、他州のラクレットとはレシピも原料も別物（2017年判決で「Raclette」単独表示は地理的に限定された）。</p>
+    </div>
+  </article>
+
+  <!-- Sbrinz -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="cuite" data-id="sbrinz-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Sbrinz AOP</h3>
+      <div class="card-name-jp">ズブリンツ</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2002</span>
+        <span class="badge">超硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>スイス中央（Lucerne, Schwyz, Nidwalden, Obwalden, Zug）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>最低18ヶ月、通常22〜36ヶ月</dd>
+        <dt>形状</dt><dd>円盤型 35–48kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">超硬質、削るかパン状にして食べる「Möckli」のスタイルが伝統。塩味と旨味が深く、ジャリッとした結晶。Parmigianoより少しバター香が強い。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">パスタにすりおろし、薄削り（Möckli）でアペリティフに。熟成赤（Bordeaux, Barolo）と。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">スイス最古のチーズの一つで、「Parmigianoの先祖」と言われる説あり（16世紀にゴッタルド峠経由でイタリアへ伝来したという仮説）。名はBrienzから。</p>
+    </div>
+  </article>
+
+  <!-- L'Etivaz -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="cuite" data-id="letivaz-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">L'Etivaz AOP</h3>
+      <div class="card-name-jp">レティヴァ</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2000</span>
+        <span class="badge">硬質加熱圧搾</span>
+        <span class="badge">アルパージュ限定</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Pays-d'Enhaut（カントン・ヴォー）、標高1000–2000m</dd>
+        <dt>原料</dt><dd>夏のアルプ放牧期間（5/10〜10/10）の無殺菌牛乳のみ</dd>
+        <dt>熟成</dt><dd>最低135日、通常6〜18ヶ月</dd>
+        <dt>製法</dt><dd>銅釜で薪火で加熱（直火）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Gruyèreの「アルパージュ版・夏限定」というべき高級版。煙の香り（直火製造由来）、高山ハーブ、ナッツ、複雑な余韻。年間生産量は限られる。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま削るか薄く切って。Vin Jaune、熟成Chasselas、Petite Arvine。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">1934年、Gruyèreの工業化に反発した76軒の生産者が「夏のアルプの伝統製法だけを守る」と独立。村の協同組合熟成庫に集約されて熟成される。スイスのチーズ職人の中でも一目置かれる存在。</p>
+    </div>
+  </article>
+
+  <!-- Tomme Vaudoise -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="molle" data-id="tomme-vaudoise">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Tomme Vaudoise</h3>
+      <div class="card-name-jp">トム・ヴォードワーズ</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge">伝統製品</span>
+        <span class="badge">白カビ系</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>カントン・ヴォー（CERN至近）</dd>
+        <dt>原料</dt><dd>低温殺菌または無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>1〜3週間</dd>
+        <dt>形状</dt><dd>小型円盤 100g前後</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">白カビ系の柔らかいチーズ。若いものはミルキーで上品、熟成すると中がとろけて表皮の風味が増す。ローカル色が強く、ジュネーヴ・ローザンヌの市場で必ず見かける。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">パン粉をつけて揚げる「Tomme à l'huile」も人気。Chasselas de La Côte、Aigleの白。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">CERN周辺のチーズらしいチーズ。スーパー（Migros, Coop）でも頻繁に見かけるが、市場で買う方が圧倒的に旨い（とくにGenève近郊のVully地区産）。</p>
+    </div>
+  </article>
+
+  <!-- Berner Alpkäse -->
+  <article class="card" data-region="ch" data-milk="vache" data-family="cuite" data-id="berner-alpkase-hobelkase-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Berner Alpkäse / Hobelkäse AOP</h3>
+      <div class="card-name-jp">ベルナー・アルプケーゼ / ホーベルケーゼ</div>
+      <div class="badges">
+        <span class="badge ch">🇨🇭 Suisse</span>
+        <span class="badge aop">AOP 2004</span>
+        <span class="badge">硬質〜超硬質</span>
+        <span class="badge">アルパージュ限定</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>ベルナー・オーバーラント、エメ渓谷</dd>
+        <dt>原料</dt><dd>夏のアルプ放牧期間の無殺菌牛乳のみ</dd>
+        <dt>熟成</dt><dd>Alpkäse: 4.5ヶ月〜／Hobelkäse: 18ヶ月以上（しばしば3〜4年）</dd>
+        <dt>製法</dt><dd>銅釜・薪火、夏のアルプ小屋で毎日製造</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Hobelkäseは薄く削って食べる超熟成バージョン。アルプの花の香り、燻香、強い旨味。Alpkäseはより若くしっとり。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Hobelkäseは特別な鉋（Hobel）で薄削りにして、Bündnerfleischと一緒にアペリティフ。重めの赤、または良質のリースリング。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">L'Etivazと同様、アルパージュ限定の夏限定チーズ。Berner Oberlandの伝統的な高地放牧文化の象徴。1年中作られているわけではない希少品。</p>
+    </div>
+  </article>
+
+</div>
+
+<!-- =================== SAVOIE / JURA =================== -->
+<h2 id="savoie" class="group-heading">サヴォワ・ジュラ Savoie · Jura <span class="count">9 cheeses</span></h2>
+<div class="grid">
+
+  <!-- Reblochon -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="lavee" data-id="reblochon-de-savoie-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Reblochon de Savoie AOP</h3>
+      <div class="card-name-jp">ルブロション・ド・サヴォワ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Savoie</span>
+        <span class="badge aop">AOP 1958 (AOC) / 1996 (AOP)</span>
+        <span class="badge">ウォッシュ</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Haute-Savoie（Aravis山塊、Thônes周辺）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Abondance, Tarine, Montbéliarde種）</dd>
+        <dt>熟成</dt><dd>最低15日（マスター製法は4〜5週間）</dd>
+        <dt>区別</dt><dd>緑のpastille = fermier（農家製造）／赤 = laitier（協同組合）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">ピンク〜オレンジのwashed rind、中はクリーミーでしっとり。ヘーゼルナッツ、バター、わずかなウォッシュ系の獣香。熟成すると中がとろける。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">タルティフレット（Tartiflette）の主役——ジャガイモ・ベーコン・玉ねぎ・白ワインで作る冬料理の頂点。Apremont、Roussette de Savoie。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Reblocher」（中世フランス語で「もう一度搾る」）から。13世紀、領主の徴税を逃れるため農民が「乳搾りを1回だけ」と申告し、領主が去ったあとに2回目を搾ってこっそり作ったのが起源。脱税産物。</p>
+    </div>
+  </article>
+
+  <!-- Beaufort -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="cuite" data-id="beaufort-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Beaufort AOP</h3>
+      <div class="card-name-jp">ボーフォール</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Savoie</span>
+        <span class="badge aop">AOC 1968 / AOP 1996</span>
+        <span class="badge">硬質加熱圧搾</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Beaufortain, Tarentaise, Maurienne, Val d'Arly</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Tarine, Abondance種のみ）</dd>
+        <dt>熟成</dt><dd>最低5ヶ月（Été 6/1–10/31）、Chalet d'alpageは追加要件</dd>
+        <dt>形状</dt><dd>凹型側面の円盤 20–70kg（独特のシルエット）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「アルプスのプリンス」と呼ばれる。Gruyèreより穴がなくしっとり、フルーティで花の香り。夏ものChalet d'alpageは桁違いに香り高い。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">サヴォワ式フォンデュ（Beaufort + Comté + Emmental）の主役。単体ならRoussette、Mondeuse、Chignin-Bergeron。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">17世紀、Beaufort渓谷の協同組合「fruitière」が現在の製法を確立。BrillatSavarinが「グリュイエールの王子」と絶賛。3つのグレード：Beaufort（年中）/ Beaufort d'Été / Beaufort Chalet d'Alpage（最上級）。</p>
+    </div>
+  </article>
+
+  <!-- Tomme de Savoie -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="noncuite" data-id="tomme-de-savoie-igp">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Tomme de Savoie IGP</h3>
+      <div class="card-name-jp">トム・ド・サヴォワ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Savoie</span>
+        <span class="badge igp">IGP 1996</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Savoie, Haute-Savoie全域</dd>
+        <dt>原料</dt><dd>牛乳（生・低温殺菌・部分脱脂）</dd>
+        <dt>熟成</dt><dd>最低5週間</dd>
+        <dt>外観</dt><dd>灰色〜茶色の天然外皮（geotrichum, mucor）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">毎日のテーブルチーズ。マイルドでミルキー、わずかにキノコ的な香り。脂肪分20–40%まで幅広い（IGP規定）。山小屋でアペロに必ず登場。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、または料理に。タルティフレット、グラタン。Apremont、軽い赤Gamay de Savoie。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Tomme」は南仏オック語で「丸いチーズ」の意。Beaufortやアボンダンスを作ったあとの脱脂乳を使う「節約の知恵」から生まれた。だから脂肪分が低いものがある。</p>
+    </div>
+  </article>
+
+  <!-- Abondance -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="cuite" data-id="abondance-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Abondance AOP</h3>
+      <div class="card-name-jp">アボンダンス</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Haute-Savoie</span>
+        <span class="badge aop">AOC 1990 / AOP 1996</span>
+        <span class="badge">半硬質加熱圧搾</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Vallée d'Abondance, Chablais</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Abondance, Tarine, Montbéliarde）</dd>
+        <dt>熟成</dt><dd>最低100日</dd>
+        <dt>形状</dt><dd>側面凹型の円盤 7–12kg（Beaufortを小さくした形）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Beaufortより塩味が控えめでフルーティ、ヘーゼルナッツの余韻。夏のChalet d'alpageは特別。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Berthoud（小皿に切り、白ワインをかけてオーブンで焼くサヴォワ料理）の指定チーズ。Apremont, Roussette。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">14世紀、アボンダンス修道院の修道士が製法を確立。1381年の教皇選挙コンクラーヴェで配給されたという記録がある。「Abondance牛」という地域固有の品種もこの谷が原産。</p>
+    </div>
+  </article>
+
+  <!-- Comté -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="cuite" data-id="comte-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Comté AOP</h3>
+      <div class="card-name-jp">コンテ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Jura / Doubs</span>
+        <span class="badge aop">AOC 1958 / AOP 1996</span>
+        <span class="badge">硬質加熱圧搾</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Jura, Doubs, Ain北部（CERN北側）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Montbéliarde, Simmental Française）</dd>
+        <dt>熟成</dt><dd>最低4ヶ月、各fruitièreで6/9/12/18/24/36ヶ月と幅広く</dd>
+        <dt>形状</dt><dd>円盤 32–45kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">フランスで最も生産量が多いAOPチーズ。熟成期間で全く別物になる：若い（6ヶ月）はミルキー、24ヶ月はナッツとカラメル、36ヶ月以上は熱帯果実とチョコ。「note de dégustation」が83種類定義されている。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">熟成によりペアリングが変わる：若い→Chardonnay du Jura, 中熟成→Savagnin, 長熟成→Vin Jaune（黄ワイン）。フォンデュ・ジュラシエンヌの主役。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">フランスAOPの中で最大規模（年間6万トン以上）。「fruitière」（協同組合熟成所）システムが特徴で、農家→fruitière→affineurという三層構造で品質を管理。「Cloche du Comté」（コンテの鐘）という公式格付けまである。</p>
+    </div>
+  </article>
+
+  <!-- Morbier -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="noncuite" data-id="morbier-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Morbier AOP</h3>
+      <div class="card-name-jp">モルビエ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Jura / Doubs</span>
+        <span class="badge aop">AOC 2000 / AOP 2002</span>
+        <span class="badge">半硬質非加熱圧搾</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Jura, Doubs, Ain北部, Saône-et-Loire一部</dd>
+        <dt>原料</dt><dd>無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>最低45日</dd>
+        <dt>特徴</dt><dd>中央に植物炭（cendre）の黒い線</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">マイルドでクリーミー、わずかな草の香り。Comtéと比べると圧倒的に柔らかい。中央の黒いcendreは飾りではなく、伝統的に「朝と夕の搾乳を分ける」目印だった。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、サンドイッチ、簡易ラクレットにも。Chardonnay du Jura、Côtes du Jura白。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Comtéを作る農家が、Comté1個分に足りない朝の乳をなべに残し、灰で蓋をして虫除けし、夕方の乳を上から足して固めたのが起源。つまり「Comtéの兄弟」。現在は黒い線は食用植物炭。</p>
+    </div>
+  </article>
+
+  <!-- Bleu de Gex -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="bleu" data-id="bleu-de-gex-haut-jura-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Bleu de Gex Haut-Jura AOP</h3>
+      <div class="card-name-jp">ブルー・ド・ジェクス（CERN至近）</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Ain / Jura</span>
+        <span class="badge aop">AOC 1977 / AOP 2008</span>
+        <span class="badge">青カビ</span>
+        <span class="badge">CERN隣接</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Ain県（Haut-Jura）・Jura県の高地——CERN北側の県</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Montbéliarde, Simmental）</dd>
+        <dt>熟成</dt><dd>最低21日（通常2〜3ヶ月）</dd>
+        <dt>形状</dt><dd>円盤 6.5–7.5kg、表面に「GEX」の刻印</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">青カビが控えめで、Roquefortほど刺激的ではない優しい青。木の実、わずかな苦味、長い余韻。原料がCERN北側の県（Ain）で作られている——おそらく最もCERNに近いAOPチーズ。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、ポロ葱のグラタンに、Sauce au Bleu de Gex（ステーキソース）に。Vin de Paille du Jura、Macvin、Sauternesも。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">14世紀、ドーフィネ地方からHaut-Juraに移住した修道士が伝えた製法。フランスで最も生産量が少ないAOP青カビの一つで、わずか2〜3軒の工房でしか作られていない。CERN滞在中の「ご当地チーズ」として絶対押さえたい一品。</p>
+    </div>
+  </article>
+
+  <!-- Chevrotin -->
+  <article class="card" data-region="fr" data-milk="chevre" data-family="lavee" data-id="chevrotin-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Chevrotin AOP</h3>
+      <div class="card-name-jp">シェヴロタン</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Haute-Savoie</span>
+        <span class="badge aop">AOC 2002 / AOP 2005</span>
+        <span class="badge">ウォッシュ</span>
+        <span class="badge">山羊乳</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Aravis, Bauges, Beaufortain, Val d'Arly（Reblochon地帯と重なる）</dd>
+        <dt>原料</dt><dd>無殺菌山羊乳（Alpine種など）</dd>
+        <dt>熟成</dt><dd>最低21日</dd>
+        <dt>形状</dt><dd>小型円盤 250–350g</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「山羊乳のReblochon」というべきウォッシュタイプ。pâteは白く滑らか、表皮はピンク。山羊の柔らかな獣香、しっとり、ヘーゼルナッツ。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、または半分に切ってオーブンで温め。Roussette de Savoie、Apremont、軽い白Sauvignon。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">少量生産で、Aravis山塊のFermier（農家製）のみ。AOPで「fermier限定」と規定された数少ないチーズ。スーパーよりfromagerieか市場で。</p>
+    </div>
+  </article>
+
+  <!-- Tome des Bauges -->
+  <article class="card" data-region="fr" data-milk="vache" data-family="noncuite" data-id="tome-des-bauges-aop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Tome des Bauges AOP</h3>
+      <div class="card-name-jp">トム・デ・ボージュ</div>
+      <div class="badges">
+        <span class="badge fr">🇫🇷 Savoie</span>
+        <span class="badge aop">AOC 2002 / AOP 2007</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Région</dt><dd>Massif des Bauges（Savoie/Haute-Savoie境界の山塊）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Tarine, Abondance, Montbéliarde）</dd>
+        <dt>熟成</dt><dd>最低5週間</dd>
+        <dt>表記</dt><dd>「Tome」と書く（「Tomme」とは異なる）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Tomme de Savoieより少し凝った熟成系。土の香り、キノコ、長い余韻。外皮の灰色は天然のカビ（geotrichum）。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、フォンデュにも。Mondeuse、Apremont。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Tomme」ではなく「Tome」と1つのMしか書かないのが正式。Massif des Baugesは地域自然公園で、生産量が限定的。市場やfromagerieで探す価値あり。</p>
+    </div>
+  </article>
+
+</div>
+
+<!-- =================== NORD ITALIA =================== -->
+<h2 id="italia" class="group-heading">北イタリア Nord Italia <span class="count">12 cheeses</span></h2>
+<div class="grid">
+
+  <!-- Parmigiano Reggiano -->
+  <article class="card" data-region="it" data-milk="vache" data-family="cuite" data-id="parmigiano-reggiano-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Parmigiano Reggiano DOP</h3>
+      <div class="card-name-jp">パルミジャーノ・レッジャーノ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Emilia</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">超硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Parma, Reggio Emilia, Modena, Bologna一部, Mantova一部</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（朝の全乳＋夜の脱脂乳）、添加物一切なし</dd>
+        <dt>熟成</dt><dd>最低12ヶ月、stagionato 24ヶ月、stravecchio 36ヶ月、48ヶ月+も存在</dd>
+        <dt>形状</dt><dd>円盤 38–40kg、表面に細かい刻印（点字）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「チーズの王様（Re dei Formaggi）」。長期熟成すると砕けるような結晶構造（チロシン）が舌で弾ける。バター、パイナップル、煮詰めた牛乳、ナッツ、肉のような旨味。グルタミン酸が極めて高い。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">薄削りでアペリティフ、パスタにすりおろし、Aceto Balsamico Tradizionaleと。Lambrusco（少し甘め）、Sangiovese、Barolo。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">12世紀のシトー会修道士が起源。Boccaccioが14世紀の「デカメロン」で「Parmigianoの山」を描写。Consorzioの検査員（battitore）がハンマーで叩いて音で熟成度を判定する儀式は今も続く。製法は1934年以来ほぼ変わっていない。</p>
+    </div>
+  </article>
+
+  <!-- Grana Padano -->
+  <article class="card" data-region="it" data-milk="vache" data-family="cuite" data-id="grana-padano-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Grana Padano DOP</h3>
+      <div class="card-name-jp">グラナ・パダーノ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Pianura Padana</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">超硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Lombardia, Veneto, Piemonte, Trentino, Emilia一部の広域</dd>
+        <dt>原料</dt><dd>低温殺菌牛乳（リゾチームの使用が認められている）</dd>
+        <dt>熟成</dt><dd>最低9ヶ月、Riserva 20ヶ月以上</dd>
+        <dt>区別</dt><dd>Parmigianoより安価で生産量が圧倒的に多い</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Parmigianoのいとこ。よりマイルドで甘く、結晶は同様に存在。「料理用」の印象が強いが、Riserva 20ヶ月以上はそのままでも十分。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">パスタ、リゾット、スープに。Pinot Grigio、Soave。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">同じく12世紀のシトー会修道士起源。Parmigianoより広域生産が認められ、価格が下がる。「Grana」は「粒状」の意で、削ったときの食感を表す。スーパーで最も手に入りやすい。</p>
+    </div>
+  </article>
+
+  <!-- Gorgonzola -->
+  <article class="card" data-region="it" data-milk="vache" data-family="bleu" data-id="gorgonzola-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Gorgonzola DOP</h3>
+      <div class="card-name-jp">ゴルゴンゾーラ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Lombardia / Piemonte</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">青カビ</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Piemonte（Novara, Vercelli等）, Lombardia（Milano, Pavia等）</dd>
+        <dt>原料</dt><dd>低温殺菌牛乳＋Penicillium roqueforti</dd>
+        <dt>熟成</dt><dd>Dolce 最低50日、Piccante 最低80日</dd>
+        <dt>区別</dt><dd>Dolce（甘い）／Piccante（辛い、より長熟成・青カビ強）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Dolceはとろけるように柔らかく、甘くクリーミー、青カビは穏やか。Piccanteは硬めで、強い辛味と複雑な香り。世界三大ブルー（Roquefort, Stilton, Gorgonzola）の一角。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Dolceはペアやイチジクと、リゾットやニョッキに溶かす。Piccanteは蜂蜜と、肉料理に。Passito di Pantelleria、Vin Santo、Recioto della Valpolicella。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">名前はミラノ近郊のGorgonzola村から。9世紀から記録。伝統的には洞窟熟成だが、現在は工業生産が主流。Dolceの方が圧倒的にメジャーで、Piccanteはfromagerieで指定買いが必要なことも。</p>
+    </div>
+  </article>
+
+  <!-- Taleggio -->
+  <article class="card" data-region="it" data-milk="vache" data-family="lavee" data-id="taleggio-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Taleggio DOP</h3>
+      <div class="card-name-jp">タレッジョ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Lombardia</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">ウォッシュ</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Bergamo, Brescia, Como, Cremona, Lecco, Milano, Novara, Pavia, Treviso, Varese</dd>
+        <dt>原料</dt><dd>低温殺菌または無殺菌牛乳</dd>
+        <dt>熟成</dt><dd>最低35日（ウォッシュ・グロット熟成）</dd>
+        <dt>形状</dt><dd>正方形 2.2kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">表皮はピンク〜オレンジでウォッシュ、中身は白くしっとりクリーミー。意外なほど穏やかで、フルーティ、塩味のバランスが絶妙。香りは強いが味は優しい——Camembertのイタリア版とも言える。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、ピザに、リゾットに溶かす。ポレンタとの相性が抜群。Valpolicella、Pinot Nero dell'Alto Adige。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">10世紀以前から、ベルガモ近郊のValle Taleggioで作られていた。元はstracchino（疲れた牛のミルク）の一種で、秋に低地に降りた牛のミルクで作られた。スーパーで最も手に入りやすいウォッシュチーズ。</p>
+    </div>
+  </article>
+
+  <!-- Fontina -->
+  <article class="card" data-region="it" data-milk="vache" data-family="noncuite" data-id="fontina-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Fontina DOP</h3>
+      <div class="card-name-jp">フォンティーナ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Valle d'Aosta</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ヴァッレ・ダオスタ全域（Savoie/Mont Blancの向こう側）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（Valdostana Pezzata Rossa種）、1日2回搾乳後すぐに作る</dd>
+        <dt>熟成</dt><dd>最低90日（夏のアルパージュ熟成版あり）</dd>
+        <dt>形状</dt><dd>側面凹型の円盤 7.5–12kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">サヴォワの隣のチーズ。Beaufortと親戚関係にあるような半硬質、フルーティでバター香。よく溶ける。Fonduta valdostanaの主役。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Fonduta（フォンドゥータ：卵黄＋牛乳＋Fontinaのとろりとしたディップ）、ポレンタと一緒に。Petit Rouge、Cornalin、Petite Arvine de la Valle d'Aosta（ヴァレーと同じ品種）。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">Aosta渓谷はモンブランの反対側、Savoieと文化的・地理的に近い（ヴァッレ・ダオスタはイタリアでフランス語が公用語の自治州）。CERN滞在中の遠足としてChamonix→Mont Blancトンネル→Aostaは可能な日帰りコース。チーズが繋ぐ国境。</p>
+    </div>
+  </article>
+
+  <!-- Bitto -->
+  <article class="card" data-region="it" data-milk="melange" data-family="cuite" data-id="bitto-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Bitto DOP</h3>
+      <div class="card-name-jp">ビット</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Lombardia</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">硬質加熱圧搾</span>
+        <span class="badge">アルパージュ限定</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ヴァルテッリーナ（Valtellina, Sondrio県）</dd>
+        <dt>原料</dt><dd>牛乳90%+山羊乳最大10%（Orobica種）、夏のアルパージュのみ</dd>
+        <dt>熟成</dt><dd>最低70日、通常10年（！）まで熟成可能</dd>
+        <dt>形状</dt><dd>円盤 8–25kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">超長期熟成可能な希少品。10年物は黒っぽくなり、ほぼ薬のような濃度の旨味。新しいものはフルーティで複雑、わずかな山羊の香り。「Bitto Storico」はSlow Food Presidiumで、より厳格な伝統製法版。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Pizzoccheri（蕎麦パスタ料理）の伝統的具材。長熟成はそのまま、Barolo, Sforzato di Valtellinaと。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">2,500年前のケルト時代から作られていると言われる。「Bitto Storico vs Bitto DOP」の論争があり、伝統派は「DOP規格は緩すぎる」と独自路線を堅持している。チーズ業界の派閥争いとして有名。</p>
+    </div>
+  </article>
+
+  <!-- Asiago -->
+  <article class="card" data-region="it" data-milk="vache" data-family="noncuite" data-id="asiago-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Asiago DOP</h3>
+      <div class="card-name-jp">アジアーゴ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Veneto / Trentino</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">半硬質〜硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Vicenza, Trento, Padova, Treviso（Asiago高原）</dd>
+        <dt>原料</dt><dd>牛乳（全乳または部分脱脂）</dd>
+        <dt>熟成</dt><dd>Pressato (Fresco): 20日／Allevo: 60日〜（Mezzano 4–6m, Vecchio 10m+, Stravecchio 15m+）</dd>
+        <dt>区別</dt><dd>Pressato（若く柔らかい）／Allevo（熟成・硬質）の2系統</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Pressatoはマイルドで弾力があり、サンドイッチ向き。Allevo Stravecchioは硬質でナッツ・カラメル、すりおろし用に。同じDOPで全く別物の2つが存在するのが特徴。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Pressato→Soave、Prosecco／Vecchio→Amarone、Cabernet。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">中世にはAsiago高原で羊乳のチーズだったが、19世紀に牛乳製法に転換。スーパーで最もよく見るのはPressato。Allevoは指定買い必須。</p>
+    </div>
+  </article>
+
+  <!-- Castelmagno -->
+  <article class="card" data-region="it" data-milk="vache" data-family="bleu" data-id="castelmagno-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Castelmagno DOP</h3>
+      <div class="card-name-jp">カステルマーニョ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Piemonte</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">半硬質（薄青系）</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Castelmagno, Pradleves, Monterosso Grana（Cuneo県、Valle Grana）</dd>
+        <dt>原料</dt><dd>無殺菌牛乳（最大5%山羊乳・羊乳を加えてもOK）</dd>
+        <dt>熟成</dt><dd>最低60日（Stagionatoは6ヶ月以上、自然な青カビが発生することも）</dd>
+        <dt>形状</dt><dd>円盤 2–7kg</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">「ピエモンテのチーズ界の至宝」と称される。砕けるような繊細な食感、酸味と甘みの絶妙なバランス。熟成すると自然に青カビが入り、独特の風味に。アルパージュ版「Castelmagno d'Alpeggio」は別格。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">蜂蜜（特にCastagno=栗の蜂蜜）と。Gnocchi al Castelmagnoは郷土料理。Barolo、Barbaresco、Nebbiolo d'Alba。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">12世紀の徴税記録に登場。Slow Foodの本拠地ピエモンテで、伝統製法の維持に厳格。市場でアルパージュ版を見つけたら絶対買い。</p>
+    </div>
+  </article>
+
+  <!-- Toma Piemontese -->
+  <article class="card" data-region="it" data-milk="vache" data-family="noncuite" data-id="toma-piemontese-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Toma Piemontese DOP</h3>
+      <div class="card-name-jp">トーマ・ピエモンテーゼ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Piemonte</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ピエモンテ州全域（山岳・丘陵地帯）</dd>
+        <dt>原料</dt><dd>牛乳（全乳または部分脱脂）</dd>
+        <dt>熟成</dt><dd>最低15日（小型）／60日（大型）</dd>
+        <dt>形状</dt><dd>円盤 2–8kg、複数サイズ</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">ピエモンテ版のTomme。マイルドで日常使い、しっとり柔らかい。サヴォワTomme、スイスTommeとの食べ比べが面白い。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、料理に。Barbera、Dolcetto、Arneis。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Toma」はサヴォワ・ピエモンテ・ヴァッレ・ダオスタ共通の言葉（Tomme/Tomaは同一語源）。山を挟んで同じ系統のチーズが存在する地理的事実が面白い。</p>
+    </div>
+  </article>
+
+  <!-- Robiola di Roccaverano -->
+  <article class="card" data-region="it" data-milk="chevre" data-family="molle" data-id="robiola-di-roccaverano-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Robiola di Roccaverano DOP</h3>
+      <div class="card-name-jp">ロビオラ・ディ・ロッカヴェラーノ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Piemonte</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">フレッシュ〜白カビ</span>
+        <span class="badge">山羊乳</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Langhe Astigiane（Asti県南部）</dd>
+        <dt>原料</dt><dd>山羊乳最低50%（残りは牛乳・羊乳）、純100%山羊乳版もあり</dd>
+        <dt>熟成</dt><dd>最低3日（フレッシュ）〜数週間（熟成）</dd>
+        <dt>形状</dt><dd>小型円盤 250–400g</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">純100%山羊乳のフレッシュ版は、酸味とミルキーさが絶品。熟成すると表面に白カビが発達し、コクが増す。イタリア唯一の主要山羊乳DOP。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">そのまま、トーストに、サラダに。Asti spumante、Arneis、Moscato。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">「Robiola」はピエモンテ全域でフレッシュチーズの総称だが、Roccaveranoが唯一DOPを取得。ピエモンテのワイン産地と同じ村で作られているので、ワイナリー巡りと一緒に。</p>
+    </div>
+  </article>
+
+  <!-- Bra -->
+  <article class="card" data-region="it" data-milk="vache" data-family="noncuite" data-id="bra-dop">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Bra DOP</h3>
+      <div class="card-name-jp">ブラ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Piemonte</span>
+        <span class="badge dop">DOP 1996</span>
+        <span class="badge">半硬質</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>Cuneo県全域＋Villafranca Piemonte（Torino県）</dd>
+        <dt>原料</dt><dd>牛乳（最大羊乳・山羊乳追加可）</dd>
+        <dt>熟成</dt><dd>Tenero（柔）45日／Duro（硬）6ヶ月以上</dd>
+        <dt>区別</dt><dd>Tenero（若く柔らかい）／Duro（長熟成、すりおろし用）</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">Tenero（テネロ）は弾力があり優しい、Duro（ドゥーロ）は塩味と旨味が強い。Slow Foodの拠点である町Braが名前の由来——Slow Food本部がここにある。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Teneroはそのまま、Duroはおろして料理に。Nebbiolo、Dolcetto。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">町Braはイタリアのスローフード運動発祥地。隔年で「Cheese」という世界最大級のチーズフェスティバルが開催される（2027年が次回予定）。</p>
+    </div>
+  </article>
+
+  <!-- Mascarpone -->
+  <article class="card" data-region="it" data-milk="vache" data-family="fraiche" data-id="mascarpone">
+    <div class="card-photo"></div>
+    <div class="card-body">
+      <h3 class="card-name">Mascarpone</h3>
+      <div class="card-name-jp">マスカルポーネ</div>
+      <div class="badges">
+        <span class="badge it">🇮🇹 Lombardia</span>
+        <span class="badge">伝統製品（DOPなし）</span>
+        <span class="badge">フレッシュ</span>
+      </div>
+      <dl class="specs">
+        <dt>Régione</dt><dd>ロンバルディア（特にAbbiategrasso, Lodi周辺）</dd>
+        <dt>原料</dt><dd>牛乳の生クリーム（脂肪分40%以上）＋クエン酸または酒石酸</dd>
+        <dt>熟成</dt><dd>なし（フレッシュ）</dd>
+        <dt>形状</dt><dd>パック詰めペースト</dd>
+      </dl>
+      <div class="section-title">味・食感・香り</div>
+      <p class="section-body">分類上は厳密にはチーズではなく「クリーム製品」（凝乳しない）。濃厚で甘く、ヨーグルトと生クリームの中間。脂肪分極めて高い。</p>
+      <div class="section-title">食べ方・ペアリング</div>
+      <p class="section-body">Tiramisùの主役。リゾットの仕上げにも。Moscato、Vin Santo。</p>
+      <div class="section-title">歴史・豆知識</div>
+      <p class="section-body">16世紀のロンバルディア起源。語源は諸説あり、地方方言の「マスカルパ」（chi sa che cosa = 何だかわからない）から。1990年代の「Tiramisùブーム」で世界的に広まった。</p>
+    </div>
+  </article>
+
+</div>
+
+
+<nav class="detail-nav" aria-label="Item navigation bottom">
+  <button type="button" data-direction="prev">← 前のアイテム</button>
+  <button type="button" data-direction="next">次のアイテム →</button>
+</nav>
+
+<footer class="colophon">
+  <p><strong>Cheese Atlas v0.1</strong> — Personal field guide compiled 2026-05, CERN/Geneva</p>
+  <p>次バージョン予定：(1) 各チーズに自分で撮った写真を追加 (2) 試食メモ・購入場所のフィールドログ (3) サラミ・ハム・ソーセージ編 (4) ワインペアリングの詳細リンク</p>
+  <p>References: <a href="https://www.aop-igp.ch/" target="_blank">Swiss PDO-PGI Association</a> · <a href="https://www.inao.gouv.fr/" target="_blank">INAO France</a> · <a href="https://www.politicheagricole.it/" target="_blank">MIPAAF Italia</a> · Wikipedia (FR/IT/EN/DE) · Cheeses from Switzerland · CNAOL</p>
+  <p>©2026 — Personal study project, non-commercial. Photos to be added (CC-BY upon publication).</p>
+</footer>
+
+</div>
+
+<script>
+  // Filter logic
+  const state = { region: 'all', milk: 'all', family: 'all' };
+  const chips = document.querySelectorAll('.chip');
+  const cards = document.querySelectorAll('.card');
+  const groupHeadings = document.querySelectorAll('.group-heading');
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const filterType = chip.dataset.filter;
+      const value = chip.dataset.value;
+      state[filterType] = value;
+
+      // Update chip styling within group
+      document.querySelectorAll(`.chip[data-filter="${filterType}"]`).forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      applyFilters();
+    });
+  });
+
+  function applyFilters() {
+    let visibleCounts = { ch: 0, fr: 0, it: 0 };
+
+    cards.forEach(card => {
+      const r = card.dataset.region;
+      const m = card.dataset.milk;
+      const f = card.dataset.family;
+      const match =
+        (state.region === 'all' || state.region === r) &&
+        (state.milk === 'all' || state.milk === m) &&
+        (state.family === 'all' || state.family === f);
+      card.classList.toggle('hidden', !match);
+      if (match) visibleCounts[r] = (visibleCounts[r] || 0) + 1;
+    });
+
+    // Update group headings — hide empty groups
+    groupHeadings.forEach(h => {
+      const id = h.id;
+      const region = id === 'suisse' ? 'ch' : id === 'savoie' ? 'fr' : 'it';
+      const count = visibleCounts[region] || 0;
+      h.classList.toggle('hidden', count === 0);
+      const cspan = h.querySelector('.count');
+      if (cspan) cspan.textContent = `${count} cheese${count !== 1 ? 's' : ''}`;
+    });
+  }
+  // =================== Detail view system ===================
+  (function() {
+    const cards = Array.from(document.querySelectorAll('.card[data-id]'));
+    const cardById = new Map(cards.map(c => [c.dataset.id, c]));
+    let savedScroll = 0;
+
+    function showDetail(id) {
+      const card = cardById.get(id);
+      if (!card) return false;
+      document.querySelectorAll('.card.is-active').forEach(c => c.classList.remove('is-active'));
+      card.classList.add('is-active');
+      document.body.classList.add('detail-mode');
+      updateDetailNav(id);
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      return true;
+    }
+
+    function hideDetail() {
+      document.body.classList.remove('detail-mode');
+      document.querySelectorAll('.card.is-active').forEach(c => c.classList.remove('is-active'));
+      // Restore scroll position from before entering detail mode
+      window.scrollTo({ top: savedScroll, behavior: 'auto' });
+    }
+
+    function visibleCards() {
+      // Only those not hidden by filters
+      return cards.filter(c => !c.classList.contains('hidden'));
+    }
+
+    function updateDetailNav(currentId) {
+      const visible = visibleCards();
+      // Fall back to all cards if active card was filtered out
+      const list = visible.find(c => c.dataset.id === currentId) ? visible : cards;
+      const idx = list.findIndex(c => c.dataset.id === currentId);
+      const prevBtn = document.querySelector('.detail-nav button[data-direction="prev"]');
+      const nextBtn = document.querySelector('.detail-nav button[data-direction="next"]');
+      if (!prevBtn || !nextBtn) return;
+      prevBtn.disabled = idx <= 0;
+      nextBtn.disabled = idx === -1 || idx >= list.length - 1;
+      prevBtn.dataset.targetId = idx > 0 ? list[idx - 1].dataset.id : '';
+      nextBtn.dataset.targetId = (idx >= 0 && idx < list.length - 1) ? list[idx + 1].dataset.id : '';
+    }
+
+    function handleHash() {
+      const hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash && cardById.has(hash)) {
+        showDetail(hash);
+      } else {
+        hideDetail();
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        if (document.body.classList.contains('detail-mode')) return;
+        savedScroll = window.scrollY;
+        const id = card.dataset.id;
+        if (id) window.location.hash = id;
+      });
+    });
+
+    document.querySelectorAll('.back-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+        hideDetail();
+      });
+    });
+
+    document.querySelectorAll('.detail-nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.targetId;
+        if (id) window.location.hash = id;
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!document.body.classList.contains('detail-mode')) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+        hideDetail();
+      } else if (e.key === 'ArrowLeft') {
+        const prev = document.querySelector('.detail-nav button[data-direction="prev"]');
+        if (prev && !prev.disabled) prev.click();
+      } else if (e.key === 'ArrowRight') {
+        const next = document.querySelector('.detail-nav button[data-direction="next"]');
+        if (next && !next.disabled) next.click();
+      }
+    });
+
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
+  })();
+
+</script>
+
+</body>
+</html>
