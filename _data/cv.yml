@@ -55,17 +55,20 @@ cv:
     Experience:
       - company: ALICE Collaboration
         position: ALICE Junior Representative for Japan
+        url: https://alice-collaboration.web.cern.ch/organization/juniors/index.html
         start_date: 2025-08
         end_date: Present
 
       - company: CERN
         position: Member of the ALICE Collaboration
         location: Geneva, Switzerland
+        url: https://greybook.cern.ch/participant/detail?id=868776
         start_date: 2023-04
         end_date: Present
 
       - company: WPI-SKCM², Hiroshima University
         position: Researcher
+        url: https://wpi-skcm2.hiroshima-u.ac.jp/people/shunsuke-kurita/
         start_date: 2024-04
         end_date: Present
 
@@ -91,13 +94,19 @@ cv:
         date: 2025
 
     Presentations:
-      - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2026. *Electron–muon azimuthal correlations from heavy-flavor hadron decays in proton-proton collisions at $\sqrt{s} = 13.6$ TeV with ALICE*. Poster presentation: Hard Probes 2026, Nashville, TN, USA. (Scheduled)'
+      - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2026. *Transverse-momentum-differential azimuthal correlation of heavy-flavor electron-muon pairs in pp collisions at $\sqrt{s}=13.6$ TeV with ALICE*. Oral presentation: The 11th Asian Triangle Heavy-Ion Conference (ATHIC 2026), Shanghai, China. (Scheduled)'
 
-      - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2025. *Study of electron-muon correlations from heavy-flavor decays in proton-proton collisions with ALICE*. Oral presentation: The Physical Society of Japan (JPS) Autumn Meeting, Higashi-Hiroshima, Japan.'
+      - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2026. *Azimuthal correlation analysis of e-mu pairs from heavy-flavor decays in pp and OO collisions with ALICE*. Oral presentation: The Physical Society of Japan (JPS) Autumn Meeting, Tokyo, Japan.'
+
+      - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2026. *Electron–muon azimuthal correlations from heavy-flavor hadron decays in proton-proton collisions at $\sqrt{s} = 13.6$ TeV with ALICE*. Poster presentation: Hard Probes 2026, Nashville, TN, USA.'
+
+      - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2025. *Study of electron-muon correlations from heavy-flavor decays in proton-proton collisions with ALICE*. Oral presentation: The Physical Society of Japan (JPS) Autumn Meeting, Hiroshima, Japan.'
 
       - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2024. *Fundamental analysis for electron-muon azimuthal correlations from heavy-flavor decays in proton-proton collisions with ALICE*. Oral presentation: The Physical Society of Japan (JPS) Annual Meeting, Hokkaido, Japan.'
 
       - bullet: '**Kurita, S.** (presenting, for the ALICE Collaboration). 2024. *First study for azimuthal correlations of electron-muon pairs from heavy flavor decays in proton-proton collisions with ALICE*. Poster presentation: 12th International Conference on Hard and Electromagnetic Probes of High-Energy Nuclear Collisions (Hard Probes 2024), Nagasaki, Japan.'
+
+      - bullet: '**Kurita, S.** (presenting, for the ALICE 3 RICH Collaboration). 2023. *Simulation study of the Ring Imaging Cherenkov detector for the next-generation heavy-ion experiment at LHC*. Poster presentation: The 9th Asian Triangle Heavy-Ion Conference (ATHIC 2023), Hiroshima, Japan.'
 
     Teaching:
       - bullet: "**Numerical Methods in Physics** — Teaching Assistant, Hiroshima University (Oct. 2023 – Mar. 2024)"
